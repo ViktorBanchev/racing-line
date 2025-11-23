@@ -1,8 +1,24 @@
 
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
+import { useEffect, useState } from 'react';
+import request from '../../utils/request.js';
 
 export default function ArticleDetails() {
+    const { articleId } = useParams();
+    console.log(articleId);
+
+    const [article, setArticle] = useState({});
+    console.log(`/articles/${articleId}`);
+
+    useEffect(() => {
+        request(`/articles/${articleId}`)
+            .then(result => {
+                setArticle(result)
+            })
+            .catch(err => alert(err.message))
+    }, [articleId])
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -22,23 +38,23 @@ export default function ArticleDetails() {
                     {/* Header */}
                     <header className="mb-8">
                         <span className="inline-block bg-[#e10600] text-white px-4 py-1.5 rounded-lg text-sm font-semibold mb-4 uppercase">
-                            Race Reports
+                            {article.category}
                         </span>
                         <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                            Verstappen Dominates Abu Dhabi Grand Prix in Spectacular Fashion
+                            {article.title}
                         </h1>
 
                         {/* Meta */}
                         <div className="flex flex-wrap justify-between items-center gap-4 py-6 border-t border-b border-gray-200">
                             <div className="flex items-center gap-3">
                                 <img
-                                    src="https://via.placeholder.com/50"
+                                    src={article.authorImage}
                                     alt="Author"
                                     className="w-12 h-12 rounded-full"
                                 />
                                 <div>
                                     <Link to="/authors/123" className="font-semibold text-gray-900 hover:text-[#e10600]">
-                                        Max Smith
+                                        {article.author}
                                     </Link>
                                     <p className="text-sm text-gray-500">November 22, 2025 • 5 min read</p>
                                 </div>
@@ -47,7 +63,7 @@ export default function ArticleDetails() {
                             {/* Actions */}
                             <div className="flex flex-wrap gap-2">
                                 <button className="px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all">
-                                    ❤️ 24 Likes
+                                    ❤️ {article.likes} Likes
                                 </button>
                                 <button className="px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all">
                                     🔖 Save
@@ -73,14 +89,14 @@ export default function ArticleDetails() {
                     {/* Featured Image */}
                     <div className="mb-8 rounded-xl overflow-hidden">
                         <img
-                            src="https://via.placeholder.com/1200x600"
+                            src={article.image}
                             alt="Article"
                             className="w-full h-[400px] object-cover"
                         />
                     </div>
 
                     {/* Content */}
-                    <div className="prose prose-lg max-w-none">
+                    {/* <div className="prose prose-lg max-w-none">
                         <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
                             Red Bull driver Max Verstappen secured another dominant victory at the Abu Dhabi Grand Prix, showcasing his exceptional skill under the lights of Yas Marina Circuit.
                         </p>
@@ -116,22 +132,28 @@ export default function ArticleDetails() {
                             <li>4. Lando Norris (McLaren) - +18.234s</li>
                             <li>5. Carlos Sainz (Ferrari) - +23.891s</li>
                         </ul>
+                    </div> */}
+
+                    <div className="prose prose-lg max-w-none">
+                        <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
+                            {article.content}
+                        </p>
                     </div>
 
                     {/* Stats */}
                     <div className="flex justify-center gap-12 py-8 mt-8 border-t border-gray-200">
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-[#e10600]">156</div>
+                            <div className="text-3xl font-bold text-[#e10600]">{article.views}</div>
                             <div className="text-gray-500 text-sm">Views</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-[#e10600]">24</div>
+                            <div className="text-3xl font-bold text-[#e10600]">{article.likes}</div>
                             <div className="text-gray-500 text-sm">Likes</div>
                         </div>
-                        <div className="text-center">
+                        {/* <div className="text-center">
                             <div className="text-3xl font-bold text-[#e10600]">8</div>
                             <div className="text-gray-500 text-sm">Comments</div>
-                        </div>
+                        </div> */}
                     </div>
                 </article>
 

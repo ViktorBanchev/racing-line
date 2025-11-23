@@ -1,7 +1,19 @@
 import { Link } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
+import { useEffect, useState } from 'react';
+import request from '../../utils/request.js';
 
 export default function Home() {
+    const [articles, setArticles] = useState([])
+
+    useEffect(() => {
+        request('/articles')
+            .then(result => {
+                setArticles(Object.values(result));
+            })
+            .catch(err => alert(err.message))
+    }, [])
+
     return (
         <div className="min-h-screen bg-gray-50">
 
@@ -13,20 +25,20 @@ export default function Home() {
                             Featured Article
                         </span>
                         <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                            Verstappen Dominates Abu Dhabi Grand Prix
+                            {articles[0]?.title}
                         </h2>
                         <p className="text-xl text-gray-300 mb-6 leading-relaxed">
-                            Red Bull driver secures another victory in spectacular fashion at Yas Marina Circuit
+                            {articles[0]?.excerpt}
                         </p>
                         <div className="flex items-center gap-6 text-gray-400 mb-8 text-sm">
-                            <span>By Max Smith</span>
+                            <span>By {articles[0]?.author}</span>
                             <span>•</span>
-                            <span>November 22, 2025</span>
+                            <span>{articles[0]?.date}</span>
                             <span>•</span>
-                            <span>Race Reports</span>
+                            <span>{articles[0]?.category}</span>
                         </div>
                         <Link
-                            to="/articles/123"
+                            to={`/articles/${articles[0]?._id}`}
                             className="inline-block bg-[#e10600] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#c10500] transition-all hover:shadow-lg hover:shadow-[#e10600]/30 text-lg"
                         >
                             Read Article
@@ -63,12 +75,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold mb-8">Latest Articles</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <ArticleCard />
-                    <ArticleCard />
-                    <ArticleCard />
-                    <ArticleCard />
-                    <ArticleCard />
-                    <ArticleCard />
+                    {articles.map(article => <ArticleCard key={article._id} {...article} />)}
                 </div>
 
                 {/* Pagination */}
