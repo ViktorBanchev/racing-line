@@ -56,7 +56,7 @@ export default function ArticleDetails() {
                                     <Link to="/authors/123" className="font-semibold text-gray-900 hover:text-[#e10600]">
                                         {article.author}
                                     </Link>
-                                    <p className="text-sm text-gray-500">November 22, 2025 • 5 min read</p>
+                                    <p className="text-sm text-gray-500">{article.date || 'no date'} • 5 min read</p>
                                 </div>
                             </div>
 
@@ -96,8 +96,8 @@ export default function ArticleDetails() {
                     </div>
 
                     {/* Content */}
-                    {/* <div className="prose prose-lg max-w-none">
-                        <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
+                    <div className="prose prose-lg max-w-none">
+                        {/* <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
                             Red Bull driver Max Verstappen secured another dominant victory at the Abu Dhabi Grand Prix, showcasing his exceptional skill under the lights of Yas Marina Circuit.
                         </p>
 
@@ -122,22 +122,16 @@ export default function ArticleDetails() {
                         <h2 className="text-3xl font-bold mt-8 mb-4">Championship Implications</h2>
                         <p className="text-gray-700 leading-relaxed mb-4">
                             This victory extends Verstappen's championship lead to 67 points with only three races remaining. While mathematically still possible for his rivals to catch up, the Dutchman looks set to secure his fourth consecutive world championship.
+                        </p> */}
+
+                        <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
+                            {article.content}
                         </p>
 
                         <h3 className="text-2xl font-bold mt-6 mb-3">Race Results - Top 5</h3>
                         <ul className="list-disc list-inside space-y-2 text-gray-700 mb-4">
-                            <li>1. Max Verstappen (Red Bull) - 1:32:15.567</li>
-                            <li>2. Charles Leclerc (Ferrari) - +8.945s</li>
-                            <li>3. Lewis Hamilton (Mercedes) - +12.387s</li>
-                            <li>4. Lando Norris (McLaren) - +18.234s</li>
-                            <li>5. Carlos Sainz (Ferrari) - +23.891s</li>
+                            {article.raceResults?.map(result => <li>{result}</li>)}
                         </ul>
-                    </div> */}
-
-                    <div className="prose prose-lg max-w-none">
-                        <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
-                            {article.content}
-                        </p>
                     </div>
 
                     {/* Stats */}
