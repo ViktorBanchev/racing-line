@@ -65,11 +65,12 @@ export default function Header() {
                         >
                             My Articles
                         </Link>
-                        <button
+                        <Link
+                            to={'/logout'}
                             className="bg-[#38383f] text-white px-5 py-2 rounded-lg font-semibold hover:bg-[#1e1e28] transition-all"
                         >
                             Logout
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

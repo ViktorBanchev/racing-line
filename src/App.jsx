@@ -7,6 +7,7 @@ import ArticleDetails from "./components/article-details/ArticleDetails.jsx"
 import ArticleCreate from "./components/article-create/ArticleCreate.jsx"
 import Register from "./components/register/Register.jsx"
 import Login from "./components/login/Login.jsx"
+import Logout from "./components/logout/Logout.jsx"
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/articles/create" element={<ArticleCreate />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/logout" element={<Logout />} />
             </Routes>
 
             <Footer />

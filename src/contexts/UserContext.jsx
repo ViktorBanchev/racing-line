@@ -31,12 +31,17 @@ export function UserProvider(props) {
         setUser(result);
     }
 
+    const logoutHandler = () => {
+        return request('/users/logout', 'GET', null, { accessToken: user.accessToken })
+            .finally(() => setUser(null))
+    }
+
     const userContextValues = {
         user,
         isAuthenticated: !!user?.accessToken,
         registerHandler,
         loginHandler,
-        // logoutHandler
+        logoutHandler
     }
 
     return (
