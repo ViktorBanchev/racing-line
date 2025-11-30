@@ -1,0 +1,44 @@
+import { createContext, useState } from "react"
+import useRequest from "../hooks/useRequest.js";
+
+const UserContext = createContext({
+    isAuthenticated: false,
+    user: {
+        username: '',
+        email: '',
+        password: '',
+        _createdOn: 0,
+        _id: '',
+        accessToken: ''
+    },
+    registerHandler() { },
+    loginHandler() { },
+    logoutHandler() { },
+})
+
+export function UserProvider(props) {
+    const [user, setUser] = useState(null);
+    const { request } = useRequest();
+
+    const registerHandler = async ({ username, email, password }) => {
+        const newUser = { username, email, password };
+        const result = await request('/users/register', 'POST', newUser);
+        setUser(result);
+    }
+
+    const userContextValues = {
+        user,
+        isAuthenticated: !!user?.accessToken,
+        registerHandler,
+        // loginHandler,
+        // logoutHandler
+    }
+
+    return (
+        <UserContext.Provider value={userContextValues}>
+            {props.children}
+        </UserContext.Provider>
+    )
+}
+
+export default UserContext;
