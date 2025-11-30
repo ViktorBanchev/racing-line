@@ -1,18 +1,9 @@
 import { Link } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
-import { useEffect, useState } from 'react';
-import request from '../../utils/request.js';
+import useRequest from '../../hooks/useRequest.js';
 
 export default function Home() {
-    const [articles, setArticles] = useState([])
-    
-    useEffect(() => {
-        request('/articles')
-            .then(result => {
-                setArticles(Object.values(result));
-            })
-            .catch(err => alert(err.message))
-    }, [])
+    const { data: articles} = useRequest('/data/articles', [])
 
     return (
         <div className="min-h-screen bg-gray-50">

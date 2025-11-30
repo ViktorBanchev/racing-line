@@ -1,23 +1,11 @@
 
 import { Link, useParams } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
-import { useEffect, useState } from 'react';
-import request from '../../utils/request.js';
+import useRequest from '../../hooks/useRequest.js';
 
 export default function ArticleDetails() {
     const { articleId } = useParams();
-    console.log(articleId);
-
-    const [article, setArticle] = useState({});
-    console.log(`/articles/${articleId}`);
-
-    useEffect(() => {
-        request(`/articles/${articleId}`)
-            .then(result => {
-                setArticle(result)
-            })
-            .catch(err => alert(err.message))
-    }, [articleId])
+    const { data: article } = useRequest(`/data/articles/${articleId}`, {});
 
     return (
         <div className="min-h-screen bg-gray-50">
