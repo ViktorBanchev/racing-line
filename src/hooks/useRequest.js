@@ -22,6 +22,8 @@ export default function useRequest() {
         if (!response.ok) {
             throw response.statusText;
         }
+        console.log(response);
+        
 
         const result = await response.json();
         return result;

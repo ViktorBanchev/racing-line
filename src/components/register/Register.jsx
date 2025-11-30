@@ -1,12 +1,30 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useForm from "../../hooks/useForm.js";
+import useRequest from "../../hooks/useRequest.js";
+import { useContext } from "react";
+import UserContext from "../../contexts/userContext.jsx";
 
 export default function Register() {
-    const submitHandler = (formData) => {
-        //TODO: get values
-        
+    const { request } = useRequest();
+    const { registerHandler } = useContext(UserContext)
+    const navigate = useNavigate();
 
-        //TODO: API call
+    const submitHandler = async (values) => {
+        const { username, email, password, confirmPassword } = values;
+
+        if (!email || !password) {
+            return alert('email or password missing')
+        }
+
+        if (password !== confirmPassword) {
+            return alert('Password missmatch')
+        }
+        try {
+            await registerHandler({ username, email, password });
+            navigate('/');
+        } catch (error) {
+            alert(error.message)
+        }
     }
 
     const {
@@ -42,7 +60,7 @@ export default function Register() {
                             id="username"
                             className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
                             placeholder="Choose a username"
-                            name="username"
+                            {...register('username')}
                         />
                         <p className="mt-1 text-sm text-gray-500">3-20 characters, letters and numbers only</p>
                         <p className="mt-1 text-sm text-red-600 hidden">Username must be 3-20 characters</p>
@@ -58,7 +76,7 @@ export default function Register() {
                             id="email"
                             className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
                             placeholder="Enter your email"
-                            name="email"
+                            {...register('email')}
                         />
                         <p className="mt-1 text-sm text-red-600 hidden">Please enter a valid email</p>
                     </div>
@@ -105,7 +123,7 @@ export default function Register() {
                             id="password"
                             className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
                             placeholder="Create a password"
-                            name="password"
+                            {...register('password')}
                         />
                         <p className="mt-1 text-sm text-gray-500">At least 6 characters</p>
                         <p className="mt-1 text-sm text-red-600 hidden">Password must be at least 6 characters</p>
@@ -121,7 +139,7 @@ export default function Register() {
                             id="confirmPassword"
                             className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
                             placeholder="Confirm your password"
-                            name="confirmPassword"
+                            {...register('confirmPassword')}
                         />
                         <p className="mt-1 text-sm text-red-600 hidden">Passwords do not match</p>
                     </div>
