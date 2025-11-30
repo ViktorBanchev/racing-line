@@ -1,12 +1,37 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from 'react-router';
+import { useState } from 'react';
+import useForm from '../../hooks/useForm.js';
+import useRequest from '../../hooks/useRequest.js';
 
+export default function CreateArticle() {
+    const [imagePreview, setImagePreview] = useState('');
+    const [content, setContent] = useState('');
+    const navigate = useNavigate();
+    const { request } = useRequest();
 
-export default function ArticleCreate() {
-    
+    const submitAction = async (values) => {
+        const newArticle = values;
+        try {
+            await request('/data/articles', 'POST', newArticle);
+            navigate("/");
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    const {
+        register,
+        formAction
+    } = useForm(submitAction, {
+        title: '',
+        category: '',
+        image: '',
+        content: '',
+    })
 
     return (
         <div className="min-h-screen bg-gray-50 py-12">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div className="bg-white rounded-xl shadow-md p-8">
 
@@ -17,8 +42,7 @@ export default function ArticleCreate() {
                     </div>
 
                     {/* Form */}
-                    <form className="space-y-6">
-
+                    <form className="space-y-6" action={formAction}>
                         {/* Title */}
                         <div>
                             <label htmlFor="title" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -27,9 +51,9 @@ export default function ArticleCreate() {
                             <input
                                 type="text"
                                 id="title"
-                                name="title"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
+                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all text-lg"
                                 placeholder="Enter article title..."
+                                {...register('title')}
                             />
                             <p className="mt-1 text-sm text-red-600 hidden">Title is required</p>
                         </div>
@@ -41,8 +65,8 @@ export default function ArticleCreate() {
                             </label>
                             <select
                                 id="category"
-                                name="category"
                                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
+                                {...register('category')}
                             >
                                 <option value="">Select a category...</option>
                                 <option value="race-reports">Race Reports</option>
@@ -57,15 +81,15 @@ export default function ArticleCreate() {
 
                         {/* Image URL */}
                         <div>
-                            <label htmlFor="imageUrl" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Image URL <span className="text-[#e10600]">*</span>
+                            <label htmlFor="image" className="block text-sm font-semibold text-gray-900 mb-2">
+                                Featured Image URL <span className="text-[#e10600]">*</span>
                             </label>
                             <input
                                 type="url"
-                                id="imageUrl"
-                                name="imageUrl"
+                                id="image"
                                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
-                                placeholder="https://example.com/image.jpg"
+                                placeholder=""
+                                {...register('image')}
                             />
                             <p className="mt-1 text-sm text-gray-500">Paste a URL to an image for your article</p>
                             <p className="mt-1 text-sm text-red-600 hidden">Please enter a valid image URL</p>
@@ -75,32 +99,37 @@ export default function ArticleCreate() {
                         <div>
                             <div className="w-full h-64 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 overflow-hidden">
                                 <img
-                                    src="https://via.placeholder.com/800x400?text=Image+Preview"
+                                    src={imagePreview}
                                     alt="Preview"
                                     className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        e.target.src = 'https://via.placeholder.com/800x400?text=Invalid+Image+URL';
+                                    }}
                                 />
                             </div>
                         </div>
 
-                        {/* Content */}
+                        {/* Content - Simple Textarea */}
                         <div>
                             <label htmlFor="content" className="block text-sm font-semibold text-gray-900 mb-2">
                                 Article Content <span className="text-[#e10600]">*</span>
                             </label>
                             <textarea
                                 id="content"
-                                name="content"
                                 rows="15"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all resize-none"
-                                placeholder="Write your article content here..."
+                                {...register('content')}
+                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all resize-none font-mono text-sm"
+                                placeholder="Write your article content here...
 
-// You can use paragraphs, but HTML will not be rendered for security reasons.
+You can write plain text or use simple formatting.
 
-// Pro tip: Structure your content clearly with line breaks between paragraphs.
+Pro tip: Structure your content clearly with line breaks between paragraphs."
                             />
                             <div className="flex justify-between items-center mt-2">
                                 <p className="text-sm text-gray-500">Minimum 100 characters</p>
-                                <p className="text-sm font-semibold text-gray-600">0 / 5000 characters</p>
+                                <p className="text-sm font-semibold text-gray-600">
+                                    {content.length} / 5000 characters
+                                </p>
                             </div>
                             <p className="mt-1 text-sm text-red-600 hidden">Content must be at least 100 characters</p>
                         </div>
@@ -114,8 +143,14 @@ export default function ArticleCreate() {
                                 Cancel
                             </Link>
                             <button
+                                type="button"
+                                className="px-6 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all"
+                            >
+                                Save Draft
+                            </button>
+                            <button
                                 type="submit"
-                                className="px-8 py-3 bg-[#e10600] text-white rounded-lg font-semibold hover:bg-[#c10500] transition-all hover:shadow-lg hover:shadow-[#e10600]/30"
+                                className="px-8 py-3 bg-[#e10600] text-white rounded-lg font-semibold hover:bg-[#c10500] transition-all hover:shadow-lg hover:shadow-[#e10600]/30"                              
                             >
                                 Publish Article
                             </button>
