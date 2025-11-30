@@ -26,11 +26,16 @@ export function UserProvider(props) {
         setUser(result);
     }
 
+    const loginHandler = async ({ email, password }) => {
+        const result = await request('/users/login', 'POST', { email, password });
+        setUser(result);
+    }
+
     const userContextValues = {
         user,
         isAuthenticated: !!user?.accessToken,
         registerHandler,
-        // loginHandler,
+        loginHandler,
         // logoutHandler
     }
 
