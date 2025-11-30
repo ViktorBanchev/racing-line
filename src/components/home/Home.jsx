@@ -5,7 +5,7 @@ import request from '../../utils/request.js';
 
 export default function Home() {
     const [articles, setArticles] = useState([])
-
+    
     useEffect(() => {
         request('/articles')
             .then(result => {
