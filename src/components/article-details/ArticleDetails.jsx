@@ -5,7 +5,11 @@ import useRequest from '../../hooks/useRequest.js';
 
 export default function ArticleDetails() {
     const { articleId } = useParams();
-    const { data: article } = useRequest(`/data/articles/${articleId}`, {});
+    const urlParams = new URLSearchParams({
+            load: `author=_ownerId:users`
+        })
+        
+        const { data: article} = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -36,13 +40,13 @@ export default function ArticleDetails() {
                         <div className="flex flex-wrap justify-between items-center gap-4 py-6 border-t border-b border-gray-200">
                             <div className="flex items-center gap-3">
                                 <img
-                                    src={article.authorImage}
+                                    src={article.author?.image}
                                     alt="Author"
                                     className="w-12 h-12 rounded-full"
                                 />
                                 <div>
-                                    <Link to="/authors/123" className="font-semibold text-gray-900 hover:text-[#e10600]">
-                                        {article.author}
+                                    <Link to={`/authors/${article.author?._id}`} className="font-semibold text-gray-900 hover:text-[#e10600]">
+                                        {article.author?.username}
                                     </Link>
                                     <p className="text-sm text-gray-500">{article.date || 'no date'} • 5 min read</p>
                                 </div>

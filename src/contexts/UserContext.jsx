@@ -20,8 +20,8 @@ export function UserProvider(props) {
     const [user, setUser] = useState(null);
     const { request } = useRequest();
 
-    const registerHandler = async ({ username, email, password }) => {
-        const newUser = { username, email, password };
+    const registerHandler = async ({ username, email, password, image }) => {
+        const newUser = { username, email, password, image };
         const result = await request('/users/register', 'POST', newUser);
         setUser(result);
     }

@@ -8,7 +8,7 @@ export default function Register() {
     const navigate = useNavigate();
 
     const submitHandler = async (values) => {
-        const { username, email, password, confirmPassword } = values;
+        const { username, email, password, confirmPassword, image } = values;
 
         if (!email || !password) {
             return alert('email or password missing')
@@ -18,7 +18,7 @@ export default function Register() {
             return alert('Password missmatch')
         }
         try {
-            await registerHandler({ username, email, password });
+            await registerHandler({ username, email, password, image });
             navigate('/');
         } catch (error) {
             alert(error.message)
@@ -31,6 +31,7 @@ export default function Register() {
     } = useForm(submitHandler, {
         username: '',
         email: '',
+        image: '',
         password: '',
         confirmPassword: '',
     })
@@ -77,6 +78,21 @@ export default function Register() {
                             {...register('email')}
                         />
                         <p className="mt-1 text-sm text-red-600 hidden">Please enter a valid email</p>
+                    </div>
+
+                    <div>
+                        <label htmlFor="image" className="block text-sm font-semibold text-gray-900 mb-2">
+                            ImageUrl <span className="text-[#e10600]">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="image"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
+                            placeholder="Create a password"
+                            {...register('image')}
+                        />
+                        <p className="mt-1 text-sm text-gray-500">At least 6 characters</p>
+                        <p className="mt-1 text-sm text-red-600 hidden">ImageUrl must be at least 6 characters</p>
                     </div>
 
                     {/* Profile Picture */}

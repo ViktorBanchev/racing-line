@@ -3,7 +3,13 @@ import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
 
 export default function Home() {
-    const { data: articles} = useRequest('/data/articles', [])
+    const urlParams = new URLSearchParams({
+        load: `author=_ownerId:users`
+    })
+    
+    const { data: articles} = useRequest(`/data/articles?${urlParams}`, [])
+    console.log(articles);
+    
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -22,9 +28,9 @@ export default function Home() {
                             {articles[0]?.excerpt}
                         </p>
                         <div className="flex items-center gap-6 text-gray-400 mb-8 text-sm">
-                            <span>By {articles[0]?.author}</span>
+                            <span>By {articles[0]?.author.username}</span>
                             <span>•</span>
-                            <span>{articles[0]?.date}</span>
+                            <span>{articles[0]?.date || '20.11.2025'}</span>
                             <span>•</span>
                             <span>{articles[0]?.category}</span>
                         </div>

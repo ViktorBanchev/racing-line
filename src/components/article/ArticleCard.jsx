@@ -8,7 +8,7 @@ export default function ArticleCard({
     image,
     excerpt,
     author,
-    authorImage,
+    // authorImage,
     likes,
     views
 }) {
@@ -43,11 +43,11 @@ export default function ArticleCard({
                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                     <div className="flex items-center gap-2">
                         <img
-                            src={authorImage}
+                            src={author?.image}
                             alt="Author"
                             className="w-8 h-8 rounded-full object-cover"
                         />
-                        <span className="text-sm text-gray-500 font-medium">{author}</span>
+                        <span className="text-sm text-gray-500 font-medium">{author?.username}</span>
                     </div>
 
                     <div className="flex gap-4 text-sm text-gray-500">
