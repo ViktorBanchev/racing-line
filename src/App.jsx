@@ -6,6 +6,7 @@ import Footer from "./components/footer/Footer.jsx"
 import ArticleDetails from "./components/article-details/ArticleDetails.jsx"
 import ArticleCreate from "./components/article-create/ArticleCreate.jsx"
 import Register from "./components/register/Register.jsx"
+import Login from "./components/login/Login.jsx"
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/articles/:articleId" element={<ArticleDetails />} />
                 <Route path="/articles/create" element={<ArticleCreate />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
             </Routes>
 
             <Footer />
