@@ -11,7 +11,7 @@ export default function useRequest(url, initialState) {
         let options = {}
 
         if (method) {
-            options.method = "POST"
+            options.method = method
         }
 
         if (data) {
