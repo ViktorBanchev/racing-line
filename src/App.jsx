@@ -10,6 +10,7 @@ import Logout from "./components/logout/Logout.jsx"
 import MyArticles from "./components/my-articles/MyArticles.jsx"
 import Test from "./components/test/Test.jsx"
 import ArticleCreate from "./components/article-create/ArticleCreate.jsx"
+import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteGuard.jsx"
 
 function App() {
     return (
@@ -19,12 +20,18 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/articles/:articleId" element={<ArticleDetails />} />
-                <Route path="/articles/create" element={<ArticleCreate />} />
-                <Route path="/my-articles" element={<MyArticles />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/logout" element={<Logout />} />
                 <Route path="/test" element={<Test />} />
+
+                <Route element={<AuthRouteGuard />}>
+                    <Route path="/logout" element={<Logout />} />
+                    <Route path="/my-articles" element={<MyArticles />} />
+                    <Route path="/articles/create" element={<ArticleCreate />} />
+                </Route>
+
+                <Route element={<GuestRouteGuard />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                </Route>
             </Routes>
 
             <Footer />
