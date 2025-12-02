@@ -3,9 +3,12 @@ import { Link, useParams } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
 import { Calendar, Clock, User, MessageCircle, Share2, Bookmark, Heart, ChevronRight, Edit3, Trash2, Flag, BarChart2, TrendingUp } from 'lucide-react';
+import { useContext } from 'react';
+import UserContext from '../../contexts/userContext.jsx';
 
 export default function ArticleDetails() {
     const { articleId } = useParams();
+    const { user } = useContext(UserContext);
     const urlParams = new URLSearchParams({
         load: `author=_ownerId:users`
     })
@@ -93,14 +96,19 @@ export default function ArticleDetails() {
                     {/* Article Body (8 cols) */}
                     <div className="lg:col-span-8">
                         {/* Admin Controls (Only visible to owner) */}
-                        <div className="flex gap-2 mb-6">
-                            <Link to={`/articles/edit/${articleId}`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
-                                <Edit3 size={14} /> Edit
-                            </Link>
-                            <button className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
-                                <Trash2 size={14} /> Delete
-                            </button>
-                        </div>
+                        {user?._id === article._ownerId
+                            ? (
+                                <div className="flex gap-2 mb-6">
+                                    <Link to={`/articles/edit/${articleId}`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                        <Edit3 size={14} /> Edit
+                                    </Link>
+                                    <button className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                        <Trash2 size={14} /> Delete
+                                    </button>
+                                </div>
+                            ) : ''
+                        }
+
 
                         <article className="prose prose-lg max-w-none text-[#15151e] prose-headings:font-black prose-headings:italic prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-[#e10600] prose-a:font-bold prose-a:no-underline hover:prose-a:underline prose-img:rounded-sm">
                             <p className="lead font-bold text-gray-800 text-xl border-l-4 border-[#e10600] pl-6 italic">
