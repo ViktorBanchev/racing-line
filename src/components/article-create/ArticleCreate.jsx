@@ -11,7 +11,12 @@ export default function CreateArticle() {
     const { request } = useRequest();
 
     const submitAction = async (values) => {
-        const newArticle = values;
+        const newArticle = {
+            ...values,
+            likes: 0,
+            views: 0,
+            comments: 0,
+        };
         try {
             await request('/data/articles', 'POST', newArticle);
             navigate("/");
