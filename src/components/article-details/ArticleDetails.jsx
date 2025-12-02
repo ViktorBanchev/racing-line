@@ -164,7 +164,7 @@ export default function ArticleDetails() {
                         </div>
 
                         {/* Comments Section (Simplified) */}
-                        <CommentSection />
+                        <CommentSection articleId={articleId} />
                     </div>
 
                     {/* Right Column: Sidebar (Standard) */}
