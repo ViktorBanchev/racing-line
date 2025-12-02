@@ -2,256 +2,236 @@
 import { Link, useParams } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
+import { Calendar, Clock, User, MessageCircle, Share2, Bookmark, Heart, ChevronRight, Edit3, Trash2, Flag, BarChart2, TrendingUp } from 'lucide-react';
 
 export default function ArticleDetails() {
     const { articleId } = useParams();
     const urlParams = new URLSearchParams({
-            load: `author=_ownerId:users`
-        })
-        
-        const { data: article} = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
+        load: `author=_ownerId:users`
+    })
+
+    const { data: article } = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
+
+    if (!article || !article.title) return <div className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading Paddock Data...</div>;
+
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="min-h-screen bg-white text-[#15151e]">
 
-                {/* Breadcrumb */}
-                <nav className="text-sm text-gray-500 mb-8">
-                    <Link to="/" className="hover:text-[#e10600]">Home</Link>
-                    <span className="mx-2">/</span>
-                    <Link to="/articles" className="hover:text-[#e10600]">Articles</Link>
-                    <span className="mx-2">/</span>
-                    <span>Current Article</span>
-                </nav>
+            {/* Main Content Wrapper */}
+            <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
 
-                {/* Article */}
-                <article className="bg-white rounded-xl shadow-md p-8 md:p-12 mb-12">
+                {/* --- HEADER SECTION (News Style) --- */}
+                <header className="max-w-4xl mx-auto mb-10">
 
-                    {/* Header */}
-                    <header className="mb-8">
-                        <span className="inline-block bg-[#e10600] text-white px-4 py-1.5 rounded-lg text-sm font-semibold mb-4 uppercase">
+                    {/* Category & Breadcrumb */}
+                    <div className="flex items-center gap-2 mb-4">
+                        <span className="bg-[#e10600] text-white text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider rounded-sm">
                             {article.category}
                         </span>
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                            {article.title}
-                        </h1>
+                    </div>
 
-                        {/* Meta */}
-                        <div className="flex flex-wrap justify-between items-center gap-4 py-6 border-t border-b border-gray-200">
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src={article.author?.image}
-                                    alt="Author"
-                                    className="w-12 h-12 rounded-full"
-                                />
-                                <div>
-                                    <Link to={`/authors/${article.author?._id}`} className="font-semibold text-gray-900 hover:text-[#e10600]">
-                                        {article.author?.username}
-                                    </Link>
-                                    <p className="text-sm text-gray-500">{article.date || 'no date'} • 5 min read</p>
-                                </div>
-                            </div>
+                    {/* Headline */}
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter leading-[0.95] mb-6 text-[#15151e]">
+                        {article.title}
+                    </h1>
 
-                            {/* Actions */}
-                            <div className="flex flex-wrap gap-2">
-                                <button className="px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all">
-                                    ❤️ {article.likes} Likes
-                                </button>
-                                <button className="px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all">
-                                    🔖 Save
-                                </button>
-                                <button className="px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all">
-                                    📤 Share
-                                </button>
+                    {/* Subtitle / Excerpt */}
+                    <p className="text-xl md:text-2xl text-gray-600 leading-tight font-medium mb-6">
+                        {article.subtitle}
+                    </p>
 
-                                {/* Author Controls (show only for article owner) */}
-                                <Link
-                                    to="/articles/edit/123"
-                                    className="px-4 py-2 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-800 transition-all"
-                                >
-                                    ✏️ Edit
-                                </Link>
-                                <button className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all">
-                                    🗑️ Delete
-                                </button>
+                    {/* Subtle Author & Meta Row */}
+                    <div className="flex flex-wrap items-center justify-between border-t border-b border-gray-100 py-4 gap-4">
+
+                        {/* Author Info (Subtle) */}
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={article.author.image}
+                                alt={article.author.username}
+                                className="w-10 h-10 rounded-full bg-gray-100 object-cover"
+                            />
+                            <div className="flex flex-col justify-center">
+                                <span className="text-sm font-bold text-[#15151e] leading-none mb-1 hover:text-[#e10600] cursor-pointer">
+                                    {article.author.username}
+                                </span>
+                                <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
+                                    {article.date} • 18:42 GMT
+                                </span>
                             </div>
                         </div>
-                    </header>
 
-                    {/* Featured Image */}
-                    <div className="mb-8 rounded-xl overflow-hidden">
+                        {/* Social / Actions */}
+                        <div className="flex items-center gap-4 text-gray-400">
+                            <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider mr-2 hidden sm:flex">
+                                <MessageCircle size={16} /> <span>12 Comments</span>
+                            </div>
+                            <button className="hover:text-[#e10600] transition-colors"><Share2 size={20} /></button>
+                            <button className="hover:text-[#e10600] transition-colors"><Bookmark size={20} /></button>
+                        </div>
+                    </div>
+                </header>
+
+                {/* --- MAIN IMAGE SECTION (Restricted Width) --- */}
+                <div className="max-w-5xl mx-auto mb-12">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm shadow-sm bg-gray-100 group">
                         <img
                             src={article.image}
-                            alt="Article"
-                            className="w-full h-[400px] object-cover"
+                            alt={article.title}
+                            className="w-full h-full object-cover"
                         />
-                    </div>
-
-                    {/* Content */}
-                    <div className="prose prose-lg max-w-none">
-                        {/* <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
-                            Red Bull driver Max Verstappen secured another dominant victory at the Abu Dhabi Grand Prix, showcasing his exceptional skill under the lights of Yas Marina Circuit.
-                        </p>
-
-                        <h2 className="text-3xl font-bold mt-8 mb-4">Perfect Start</h2>
-                        <p className="text-gray-700 leading-relaxed mb-4">
-                            Verstappen made a clean getaway from pole position, immediately building a gap to the chasing pack. His superior pace was evident from lap one, as he pulled away from his rivals with seemingly effortless ease.
-                        </p>
-
-                        <p className="text-gray-700 leading-relaxed mb-4">
-                            The Red Bull RB21 proved to be the car to beat once again, with its exceptional straight-line speed and cornering capabilities giving Verstappen the perfect platform to dominate the race from start to finish.
-                        </p>
-
-                        <h2 className="text-3xl font-bold mt-8 mb-4">Strategic Masterclass</h2>
-                        <p className="text-gray-700 leading-relaxed mb-4">
-                            The team's strategy was flawless throughout the 58-lap race. A well-timed pit stop during a brief Virtual Safety Car period allowed Verstappen to maintain his lead without losing significant time.
-                        </p>
-
-                        <blockquote className="border-l-4 border-[#e10600] pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">
-                            "The car felt amazing today. The team gave me the perfect strategy, and I could manage the tyres perfectly throughout the race." - Max Verstappen
-                        </blockquote>
-
-                        <h2 className="text-3xl font-bold mt-8 mb-4">Championship Implications</h2>
-                        <p className="text-gray-700 leading-relaxed mb-4">
-                            This victory extends Verstappen's championship lead to 67 points with only three races remaining. While mathematically still possible for his rivals to catch up, the Dutchman looks set to secure his fourth consecutive world championship.
-                        </p> */}
-
-                        <p className="text-xl text-gray-700 leading-relaxed font-medium mb-6">
-                            {article.content}
-                        </p>
-
-                        <h3 className="text-2xl font-bold mt-6 mb-3">Race Results - Top 5</h3>
-                        <ul className="list-disc list-inside space-y-2 text-gray-700 mb-4">
-                            {article.raceResults?.map(result => <li>{result}</li>)}
-                        </ul>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="flex justify-center gap-12 py-8 mt-8 border-t border-gray-200">
-                        <div className="text-center">
-                            <div className="text-3xl font-bold text-[#e10600]">{article.views}</div>
-                            <div className="text-gray-500 text-sm">Views</div>
+                        {/* Photo Credit */}
+                        <div className="absolute bottom-0 right-0 bg-black/50 text-white text-[10px] px-2 py-1 uppercase tracking-wider backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                            Photo by: Getty Images / Red Bull Content Pool
                         </div>
-                        <div className="text-center">
-                            <div className="text-3xl font-bold text-[#e10600]">{article.likes}</div>
-                            <div className="text-gray-500 text-sm">Likes</div>
-                        </div>
-                        {/* <div className="text-center">
-                            <div className="text-3xl font-bold text-[#e10600]">8</div>
-                            <div className="text-gray-500 text-sm">Comments</div>
-                        </div> */}
                     </div>
-                </article>
+                </div>
 
-                {/* Comments Section */}
-                <section className="bg-white rounded-xl shadow-md p-8 mb-12">
-                    <h2 className="text-2xl font-bold mb-6">Comments (8)</h2>
+                {/* --- CONTENT GRID --- */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
 
-                    {/* Comment Form */}
-                    <div className="mb-8 pb-8 border-b border-gray-200">
-                        <h3 className="text-lg font-semibold mb-4">Leave a Comment</h3>
-                        <form>
-                            <textarea
-                                placeholder="Share your thoughts..."
-                                rows="4"
-                                className="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all resize-none mb-4"
-                            />
-                            <button
-                                type="submit"
-                                className="bg-[#e10600] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#c10500] transition-all"
-                            >
-                                Post Comment
+                    {/* Article Body (8 cols) */}
+                    <div className="lg:col-span-8">
+                        {/* Admin Controls (Only visible to owner) */}
+                        <div className="flex gap-2 mb-6">
+                            <Link to={`/articles/edit/${articleId}`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                <Edit3 size={14} /> Edit
+                            </Link>
+                            <button className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                <Trash2 size={14} /> Delete
                             </button>
-                        </form>
-                    </div>
+                        </div>
 
-                    {/* Comments List */}
-                    <div className="space-y-6">
+                        <article className="prose prose-lg max-w-none text-[#15151e] prose-headings:font-black prose-headings:italic prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-[#e10600] prose-a:font-bold prose-a:no-underline hover:prose-a:underline prose-img:rounded-sm">
+                            <p className="lead font-bold text-gray-800 text-xl border-l-4 border-[#e10600] pl-6 italic">
+                                {article.content}
+                            </p>
 
-                        {/* Comment 1 */}
-                        <div className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                            <img
-                                src="https://via.placeholder.com/40"
-                                alt="User"
-                                className="w-10 h-10 rounded-full flex-shrink-0"
-                            />
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="font-semibold">John Racer</span>
-                                    <span className="text-sm text-gray-500">2 hours ago</span>
+                            <p>
+                                The RB21 looked planted from the moment it left the garage. While Ferrari struggled with tire warm-up in the intermediate conditions, Verstappen was immediately on the pace, setting purple sectors across the board.
+                            </p>
+
+                            <h3>Q3 Drama</h3>
+                            <p>
+                                The final shootout was delayed by 10 minutes due to a red flag caused by Alex Albon. When the session resumed, it was a one-lap shootout.
+                            </p>
+
+                            {/* Race Result Widget */}
+                            {article.raceResults && (
+                                <div className="not-prose my-10 bg-gray-50 border border-gray-200 rounded-sm overflow-hidden">
+                                    <div className="bg-[#15151e] text-white px-4 py-3 flex justify-between items-center">
+                                        <span className="font-bold uppercase tracking-wider text-sm">Qualifying Classification</span>
+                                        <span className="text-[#e10600] text-xs font-black italic">FINAL</span>
+                                    </div>
+                                    <div className="divide-y divide-gray-200">
+                                        {article.raceResults.map((result, i) => (
+                                            <div key={i} className="flex items-center justify-between px-4 py-3 text-sm hover:bg-white transition-colors">
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`font-black w-6 text-center ${i === 0 ? 'text-[#e10600]' : 'text-gray-400'}`}>{i + 1}</span>
+                                                    <span className="font-semibold text-gray-700">{result}</span>
+                                                </div>
+                                                <span className="font-mono text-gray-500 text-xs">+{(i * 0.24).toFixed(3)}s</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                <p className="text-gray-700 mb-3 leading-relaxed">
-                                    Incredible drive by Max! He made it look so easy out there. Red Bull's dominance is simply unmatched this season.
-                                </p>
-                                <div className="flex gap-4">
-                                    <button className="text-sm text-gray-500 hover:text-[#e10600]">👍 5</button>
-                                    <button className="text-sm text-gray-500 hover:text-[#e10600]">Reply</button>
-                                </div>
+                            )}
+
+                            <p>
+                                Team Principal Christian Horner praised the effort: "Max was in a league of his own today. The strategy call to go out early on the inters made all the difference."
+                            </p>
+                        </article>
+
+                        {/* Article Footer / Tags */}
+                        <div className="mt-12 pt-8 border-t border-gray-200">
+                            <h4 className="text-xs font-bold uppercase text-gray-400 mb-4 tracking-wider">Related Topics</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {['Red Bull Racing', 'Max Verstappen', 'Qualifying', 'Monza'].map(tag => (
+                                    <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-[#15151e] hover:text-white transition-colors cursor-pointer rounded-sm">
+                                        {tag}
+                                    </span>
+                                ))}
                             </div>
                         </div>
 
-                        {/* Comment 2 */}
-                        <div className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                            <img
-                                src="https://via.placeholder.com/40"
-                                alt="User"
-                                className="w-10 h-10 rounded-full flex-shrink-0"
-                            />
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="font-semibold">Sarah F1Fan</span>
-                                    <span className="text-sm text-gray-500">4 hours ago</span>
+                        {/* Comments Section (Simplified) */}
+                        <div className="mt-16">
+                            <h3 className="text-xl font-black uppercase italic tracking-tight mb-6 flex items-center gap-2">
+                                Discussion <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full not-italic font-bold">12</span>
+                            </h3>
+
+                            {/* Input */}
+                            <div className="flex gap-4 mb-10">
+                                <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0"></div>
+                                <div className="flex-grow relative">
+                                    <textarea
+                                        rows="3"
+                                        placeholder="Join the debate..."
+                                        className="w-full bg-gray-50 border border-gray-200 p-3 focus:border-[#e10600] focus:ring-0 outline-none transition-all resize-none text-sm rounded-sm"
+                                    ></textarea>
+                                    <button className="absolute bottom-3 right-3 bg-[#15151e] text-white px-4 py-1 text-[10px] font-bold uppercase tracking-wider hover:bg-[#e10600] transition-colors rounded-sm">
+                                        Post
+                                    </button>
                                 </div>
-                                <p className="text-gray-700 mb-3 leading-relaxed">
-                                    Great article! Really captured the excitement of the race. Can't wait for Austin!
-                                </p>
+                            </div>
+
+                            {/* Comment List */}
+                            <div className="space-y-6">
                                 <div className="flex gap-4">
-                                    <button className="text-sm text-gray-500 hover:text-[#e10600]">👍 3</button>
-                                    <button className="text-sm text-gray-500 hover:text-[#e10600]">Reply</button>
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="User" className="w-10 h-10 rounded-full bg-gray-100" />
+                                    <div>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-bold text-sm text-[#15151e]">Tifosi_4_Life</span>
+                                            <span className="text-xs text-gray-400">2 hours ago</span>
+                                        </div>
+                                        <p className="text-sm text-gray-700">Ferrari really dropped the ball with the strategy again. Why wait for Q3?</p>
+                                        <div className="flex gap-4 mt-2">
+                                            <button className="text-xs font-bold text-gray-400 hover:text-[#e10600]">Reply</button>
+                                            <button className="text-xs font-bold text-gray-400 hover:text-[#e10600]">Like (5)</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Comment 3 */}
-                        <div className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                            <img
-                                src="https://via.placeholder.com/40"
-                                alt="User"
-                                className="w-10 h-10 rounded-full flex-shrink-0"
-                            />
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="font-semibold">Mike Racing</span>
-                                    <span className="text-sm text-gray-500">5 hours ago</span>
-                                </div>
-                                <p className="text-gray-700 mb-3 leading-relaxed">
-                                    The strategy call during the VSC was perfect. That's what wins championships - not just speed, but perfect execution.
-                                </p>
-                                <div className="flex gap-4">
-                                    <button className="text-sm text-gray-500 hover:text-[#e10600]">👍 8</button>
-                                    <button className="text-sm text-gray-500 hover:text-[#e10600]">Reply</button>
-                                </div>
+                    {/* Right Column: Sidebar (Standard) */}
+                    <div className="lg:col-span-4 space-y-8">
+
+                        {/* Trending Articles */}
+                        <div className="bg-white border border-gray-200 p-0 rounded-sm">
+                            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                                <h4 className="text-sm font-black uppercase italic tracking-tighter text-[#15151e] flex items-center gap-2">
+                                    <TrendingUp size={16} className="text-[#e10600]" /> Most Read
+                                </h4>
                             </div>
+                            <div className="divide-y divide-gray-100">
+                                {[
+                                    "Horner: 'No regrets' over Perez decision",
+                                    "Mercedes brings new floor to Silverstone",
+                                    "Analysis: Why McLaren's pace is real",
+                                    "Official: 2026 Calendar Revealed"
+                                ].map((title, i) => (
+                                    <Link key={i} to="#" className="block p-4 hover:bg-gray-50 group transition-colors">
+                                        <div className="flex gap-3">
+                                            <span className="text-xl font-black text-gray-200 group-hover:text-[#e10600] italic leading-none">{i + 1}</span>
+                                            <h5 className="text-sm font-bold text-gray-700 group-hover:text-[#15151e] leading-tight">{title}</h5>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Simple Ad Placeholder (Simulating standard layout) */}
+                        <div className="bg-gray-100 h-64 flex items-center justify-center text-gray-400 text-xs font-mono uppercase tracking-widest border border-dashed border-gray-300">
+                            Advertisement Space
                         </div>
 
                     </div>
 
-                    {/* Load More */}
-                    <button className="w-full mt-6 px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all">
-                        Load More Comments
-                    </button>
-                </section>
+                </div>
 
-                {/* Related Articles */}
-                <section>
-                    <h2 className="text-3xl font-bold mb-8">Related Articles</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <ArticleCard />
-                        <ArticleCard />
-                    </div>
-                </section>
-
-            </div>
+            </main>
         </div>
     );
 }

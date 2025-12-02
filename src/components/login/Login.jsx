@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router';
 import UserContext from '../../contexts/userContext.jsx';
 import useForm from '../../hooks/useForm.js';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -26,100 +27,75 @@ export default function Login() {
     })
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen bg-[#15151e] flex items-center justify-center py-12 px-4 relative overflow-hidden">
+            {/* Background Aesthetics */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#e10600] opacity-10 rounded-full blur-[100px]"></div>
+                {/* Diagonal Slashes */}
+                <div className="absolute bottom-0 right-1/4 w-4 h-full bg-white/5 skew-x-[-12deg] transform translate-x-1/2"></div>
+            </div>
 
-                <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="max-w-md w-full relative z-10">
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-black text-white italic uppercase tracking-tighter mb-2">
+                        Welcome <span className="text-[#e10600]">Back</span>
+                    </h1>
+                    <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Login to access your garage</p>
+                </div>
 
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-                        <p className="text-gray-600">Login to your F1 Blog account</p>
-                    </div>
+                <div className="bg-white p-8 shadow-2xl relative">
+                    {/* Top Accent */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#15151e] to-[#e10600]"></div>
 
-                    {/* Form */}
                     <form className="space-y-6" action={formAction}>
 
                         {/* Email */}
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Email <span className="text-[#e10600]">*</span>
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
-                                placeholder="Enter your email"
-                                {...register('email')}
-                            />
-                            <p className="mt-1 text-sm text-red-600 hidden">Please enter a valid email</p>
+                        <div className="group">
+                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Email Address</label>
+                            <div className="relative">
+                                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                <input
+                                    type="email"
+                                    id="email"
+                                    {...register('email')}
+                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none focus:ring-2 focus:ring-[#e10600]/20 text-sm font-bold text-[#15151e] placeholder-gray-300 transition-all"
+                                    placeholder="NAME@EXAMPLE.COM"
+                                />
+                            </div>
                         </div>
 
                         {/* Password */}
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Password <span className="text-[#e10600]">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
-                                placeholder="Enter your password"
-                                {...register('password')}
-                            />
-                            <p className="mt-1 text-sm text-red-600 hidden">Password is required</p>
+                        <div className="group">
+                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Password</label>
+                            <div className="relative">
+                                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                <input
+                                    type="password"
+                                    id="password"
+                                    {...register('password')}
+                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none focus:ring-2 focus:ring-[#e10600]/20 text-sm font-bold text-[#15151e] placeholder-gray-300 transition-all"
+                                    placeholder="••••••••"
+                                />
+                            </div>
                         </div>
 
-                        {/* Remember & Forgot */}
-                        {/* <div className="flex justify-between items-center">
-                            <label className="flex items-center cursor-pointer">
-                                <input type="checkbox" className="w-4 h-4 mr-2" />
-                                <span className="text-sm text-gray-700">Remember me</span>
-                            </label>
-                            <a href="#" className="text-sm text-[#e10600] hover:text-[#c10500] font-medium">
-                                Forgot password?
-                            </a>
-                        </div> */}
-
-                        {/* Submit */}
                         <button
                             type="submit"
-                            className="w-full bg-[#e10600] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#c10500] transition-all hover:shadow-lg hover:shadow-[#e10600]/30"
+                            className="w-full bg-[#e10600] text-white py-4 mt-4 font-black uppercase italic tracking-wider hover:bg-[#c10500] transition-all duration-300 group flex items-center justify-center gap-2 shadow-lg shadow-red-500/20"
                         >
-                            Login
+                            Enter Paddock <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </button>
-
-                        {/* Divider */}
-                        <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-300"></div>
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-white text-gray-500 font-semibold">OR</span>
-                            </div>
-                        </div>
-
-                        {/* Social Login */}
-                        {/* <button
-                            type="button"
-                            className="w-full flex items-center justify-center gap-3 px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-all"
-                        >
-                            <span>🔍</span>
-                            <span>Continue with Google</span>
-                        </button> */}
-
                     </form>
 
-                    {/* Switch to Register */}
-                    <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-                        <p className="text-gray-600">
-                            Don't have an account?{' '}
-                            <Link to="/register" className="text-[#e10600] hover:text-[#c10500] font-semibold">
-                                Register here
+                    <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                        <p className="text-gray-500 text-xs font-semibold">
+                            New to Racing Line?{' '}
+                            <Link to="/register" className="text-[#15151e] font-bold uppercase hover:text-[#e10600] transition-colors">
+                                Register Here
                             </Link>
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>

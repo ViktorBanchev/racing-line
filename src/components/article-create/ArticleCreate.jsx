@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
 import useForm from '../../hooks/useForm.js';
 import useRequest from '../../hooks/useRequest.js';
+import { Image as ImageIcon, FileText, Tag, Type } from 'lucide-react';
 
 export default function CreateArticle() {
     const [imagePreview, setImagePreview] = useState('');
@@ -30,134 +31,121 @@ export default function CreateArticle() {
     })
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#f8f9fa] py-12 lg:py-20">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div className="bg-white rounded-xl shadow-md p-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl md:text-4xl font-black text-[#15151e] uppercase italic tracking-tighter">
+                        Create <span className="text-[#e10600]">Article</span>
+                    </h1>
+                    <div className="h-1 w-24 bg-[#e10600] mt-2 skew-x-[-12deg]"></div>
+                </div>
 
-                    {/* Header */}
-                    <div className="text-center mb-10 pb-8 border-b border-gray-200">
-                        <h1 className="text-4xl font-bold mb-3">Create New Article</h1>
-                        <p className="text-lg text-gray-600">Share your F1 insights with the community</p>
-                    </div>
+                <div className="bg-white p-8 md:p-10 shadow-lg border-t-4 border-[#e10600] relative overflow-hidden">
+                    {/* Background accent */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-full -mr-16 -mt-16 z-0"></div>
 
-                    {/* Form */}
-                    <form className="space-y-6" action={formAction}>
-                        {/* Title */}
-                        <div>
-                            <label htmlFor="title" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Article Title <span className="text-[#e10600]">*</span>
+                    <form className="relative z-10 space-y-8" action={formAction}>
+
+                        {/* Title Section */}
+                        <div className="space-y-2">
+                            <label htmlFor="title" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                <Type size={14} className="text-[#e10600]" /> Headline
                             </label>
                             <input
                                 type="text"
                                 id="title"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all text-lg"
-                                placeholder="Enter article title..."
+                                className="w-full px-4 py-3 bg-gray-50 border-l-4 border-transparent focus:border-[#e10600] focus:bg-white focus:ring-0 outline-none transition-all text-lg font-bold placeholder-gray-300"
+                                placeholder="ENTER ARTICLE HEADLINE..."
                                 {...register('title')}
                             />
-                            <p className="mt-1 text-sm text-red-600 hidden">Title is required</p>
                         </div>
 
-                        {/* Category */}
-                        <div>
-                            <label htmlFor="category" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Category <span className="text-[#e10600]">*</span>
-                            </label>
-                            <select
-                                id="category"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
-                                {...register('category')}
-                            >
-                                <option value="">Select a category...</option>
-                                <option value="race-reports">Race Reports</option>
-                                <option value="technical">Technical</option>
-                                <option value="driver-news">Driver News</option>
-                                <option value="team-news">Team News</option>
-                                <option value="opinion">Opinion</option>
-                                <option value="analysis">Analysis</option>
-                            </select>
-                            <p className="mt-1 text-sm text-red-600 hidden">Please select a category</p>
-                        </div>
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* Category */}
+                            <div className="space-y-2">
+                                <label htmlFor="category" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                    <Tag size={14} className="text-[#e10600]" /> Category
+                                </label>
+                                <div className="relative">
+                                    <select
+                                        id="category"
+                                        className="w-full px-4 py-3 bg-gray-50 border-l-4 border-transparent focus:border-[#e10600] focus:bg-white focus:ring-0 outline-none transition-all appearance-none font-medium text-gray-700 cursor-pointer"
+                                        {...register('category')}
+                                    >
+                                        <option value="">Select Sector...</option>
+                                        <option value="race-reports">Race Reports</option>
+                                        <option value="technical">Technical Analysis</option>
+                                        <option value="driver-news">Driver Market</option>
+                                        <option value="team-news">Team Updates</option>
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[6px] border-t-gray-400"></div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        {/* Image URL */}
-                        <div>
-                            <label htmlFor="image" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Featured Image URL <span className="text-[#e10600]">*</span>
-                            </label>
-                            <input
-                                type="url"
-                                id="image"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all"
-                                placeholder=""
-                                {...register('image')}
-                            />
-                            <p className="mt-1 text-sm text-gray-500">Paste a URL to an image for your article</p>
-                            <p className="mt-1 text-sm text-red-600 hidden">Please enter a valid image URL</p>
-                        </div>
-
-                        {/* Image Preview */}
-                        <div>
-                            <div className="w-full h-64 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 overflow-hidden">
-                                <img
-                                    src={imagePreview}
-                                    alt="Preview"
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.target.src = 'https://via.placeholder.com/800x400?text=Invalid+Image+URL';
-                                    }}
+                            {/* Image URL */}
+                            <div className="space-y-2">
+                                <label htmlFor="image" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                    <ImageIcon size={14} className="text-[#e10600]" /> Cover Image
+                                </label>
+                                <input
+                                    type="url"
+                                    id="image"
+                                    className="w-full px-4 py-3 bg-gray-50 border-l-4 border-transparent focus:border-[#e10600] focus:bg-white focus:ring-0 outline-none transition-all font-medium text-sm text-gray-700 placeholder-gray-300"
+                                    placeholder="https://..."
+                                    {...register('image')}
+                                    onChange={(e) => setImagePreview(e.target.value)}
                                 />
                             </div>
                         </div>
 
-                        {/* Content - Simple Textarea */}
-                        <div>
-                            <label htmlFor="content" className="block text-sm font-semibold text-gray-900 mb-2">
-                                Article Content <span className="text-[#e10600]">*</span>
+                        {/* Image Preview Area */}
+                        {imagePreview && (
+                            <div className="w-full h-48 bg-gray-100 overflow-hidden relative group">
+                                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 text-[10px] font-bold uppercase">Preview</div>
+                            </div>
+                        )}
+
+                        {/* Content */}
+                        <div className="space-y-2">
+                            <label htmlFor="content" className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                <FileText size={14} className="text-[#e10600]" /> Article Body
                             </label>
                             <textarea
                                 id="content"
                                 rows="15"
                                 {...register('content')}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e10600] focus:outline-none transition-all resize-none font-mono text-sm"
-                                placeholder="Write your article content here...
-
-You can write plain text or use simple formatting.
-
-Pro tip: Structure your content clearly with line breaks between paragraphs."
+                                onChange={(e) => setContent(e.target.value)}
+                                className="w-full p-4 bg-gray-50 border border-gray-100 focus:border-[#e10600] focus:ring-0 outline-none transition-all resize-none font-mono text-sm leading-relaxed"
+                                placeholder="Start typing your analysis..."
                             />
-                            <div className="flex justify-between items-center mt-2">
-                                <p className="text-sm text-gray-500">Minimum 100 characters</p>
-                                <p className="text-sm font-semibold text-gray-600">
-                                    {content.length} / 5000 characters
-                                </p>
+                            <div className="flex justify-between text-[10px] uppercase font-bold text-gray-400">
+                                <span>Markdown Supported</span>
+                                <span>{content.length} Chars</span>
                             </div>
-                            <p className="mt-1 text-sm text-red-600 hidden">Content must be at least 100 characters</p>
                         </div>
 
                         {/* Actions */}
-                        <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
+                        <div className="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
                             <Link
                                 to="/articles"
-                                className="px-6 py-3 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-800 transition-all"
+                                className="px-6 py-3 text-gray-500 font-bold uppercase text-xs tracking-wider hover:text-[#15151e] transition-colors"
                             >
                                 Cancel
                             </Link>
                             <button
-                                type="button"
-                                className="px-6 py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg font-semibold hover:border-[#e10600] hover:text-[#e10600] transition-all"
-                            >
-                                Save Draft
-                            </button>
-                            <button
                                 type="submit"
-                                className="px-8 py-3 bg-[#e10600] text-white rounded-lg font-semibold hover:bg-[#c10500] transition-all hover:shadow-lg hover:shadow-[#e10600]/30"                              
+                                className="bg-[#e10600] text-white px-8 py-3 font-black uppercase italic tracking-wider transform -skew-x-12 hover:skew-x-0 hover:bg-[#c10500] transition-all shadow-lg hover:shadow-red-500/30"
                             >
-                                Publish Article
+                                <span className="skew-x-12 inline-block">Publish Story</span>
                             </button>
                         </div>
-
                     </form>
-
                 </div>
             </div>
         </div>
