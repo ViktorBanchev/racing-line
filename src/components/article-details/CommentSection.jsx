@@ -4,12 +4,15 @@ import useRequest from "../../hooks/useRequest.js";
 
 export default function CommentSection({ articleId }) {
     // const [comments, setComments] = useState([]);
+    
+    //!! FIX ISSUE --> Name doesn't appear after creating comments. Appears only after page refresh!!!!!
+
     const formRef = useRef();
     const urlParams = new URLSearchParams({
         where: `_articleId="${articleId}"`,
         load: `author=_ownerId:users`
     })
-    const { request, data: comments, setData: setComments, setNewData } = useRequest(`/data/comments?${urlParams}`, []);
+    const { request, data: comments, setData: setComments } = useRequest(`/data/comments?${urlParams}`, []);
 
 
     const submitCommentHandler = async (values) => {
