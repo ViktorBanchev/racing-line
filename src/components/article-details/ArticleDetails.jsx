@@ -7,6 +7,8 @@ import { useContext } from 'react';
 import UserContext from '../../contexts/userContext.jsx';
 import CommentSection from './CommentSection.jsx';
 
+import DOMPurify from 'dompurify';
+
 export default function ArticleDetails() {
     const { articleId } = useParams();
     const { user } = useContext(UserContext);
@@ -111,44 +113,12 @@ export default function ArticleDetails() {
                         }
 
 
-                        <article className="prose prose-lg max-w-none text-[#15151e] prose-headings:font-black prose-headings:italic prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-[#e10600] prose-a:font-bold prose-a:no-underline hover:prose-a:underline prose-img:rounded-sm">
-                            <p className="lead font-bold text-gray-800 text-xl border-l-4 border-[#e10600] pl-6 italic">
-                                {article.content}
-                            </p>
+                        <article className="prose prose-lg max-w-none text-[#15151e] 
+                            prose-headings:font-black prose-headings:italic prose-headings:uppercase prose-headings:tracking-tighter 
+                            prose-a:text-[#e10600] prose-a:font-bold prose-a:no-underline hover:prose-a:underline 
+                            prose-img:rounded-sm prose-blockquote:border-l-[#e10600] prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4">
 
-                            <p>
-                                The RB21 looked planted from the moment it left the garage. While Ferrari struggled with tire warm-up in the intermediate conditions, Verstappen was immediately on the pace, setting purple sectors across the board.
-                            </p>
-
-                            <h3>Q3 Drama</h3>
-                            <p>
-                                The final shootout was delayed by 10 minutes due to a red flag caused by Alex Albon. When the session resumed, it was a one-lap shootout.
-                            </p>
-
-                            {/* Race Result Widget */}
-                            {article.raceResults && (
-                                <div className="not-prose my-10 bg-gray-50 border border-gray-200 rounded-sm overflow-hidden">
-                                    <div className="bg-[#15151e] text-white px-4 py-3 flex justify-between items-center">
-                                        <span className="font-bold uppercase tracking-wider text-sm">Qualifying Classification</span>
-                                        <span className="text-[#e10600] text-xs font-black italic">FINAL</span>
-                                    </div>
-                                    <div className="divide-y divide-gray-200">
-                                        {article.raceResults.map((result, i) => (
-                                            <div key={i} className="flex items-center justify-between px-4 py-3 text-sm hover:bg-white transition-colors">
-                                                <div className="flex items-center gap-3">
-                                                    <span className={`font-black w-6 text-center ${i === 0 ? 'text-[#e10600]' : 'text-gray-400'}`}>{i + 1}</span>
-                                                    <span className="font-semibold text-gray-700">{result}</span>
-                                                </div>
-                                                <span className="font-mono text-gray-500 text-xs">+{(i * 0.24).toFixed(3)}s</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <p>
-                                Team Principal Christian Horner praised the effort: "Max was in a league of his own today. The strategy call to go out early on the inters made all the difference."
-                            </p>
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
                         </article>
 
                         {/* Article Footer / Tags */}
