@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router"
+import { Route, Routes, useLocation } from "react-router"
 
 import Header from "./components/header/Header.jsx"
 import Home from "./components/home/Home.jsx"
@@ -11,10 +11,21 @@ import MyArticles from "./components/my-articles/MyArticles.jsx"
 import Test from "./components/test/Test.jsx"
 import ArticleCreate from "./components/article-create/ArticleCreate.jsx"
 import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteGuard.jsx"
+import { useEffect, useLayoutEffect } from "react"
+
+const Wrapper = ({ children }) => {
+    const { pathname } = useLocation();
+
+    useLayoutEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    }, [pathname])
+
+    return children;
+}
 
 function App() {
     return (
-        <>
+        <Wrapper>
             <Header />
 
             <Routes>
@@ -35,7 +46,7 @@ function App() {
             </Routes>
 
             <Footer />
-        </>
+        </Wrapper>
     )
 }
 
