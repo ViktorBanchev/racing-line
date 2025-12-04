@@ -1,12 +1,15 @@
 import { Link, useNavigate } from "react-router";
 import useForm from "../../hooks/useForm.js";
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import UserContext from "../../contexts/userContext.jsx";
-import { User, Mail, Lock, Image, ArrowRight } from 'lucide-react';
+import { User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload } from 'lucide-react';
 
 export default function Register() {
     const { registerHandler } = useContext(UserContext)
     const navigate = useNavigate();
+
+    const [inputMethod, setInputMethod] = useState('url'); // 'url' | 'file'
+    const fileInputRef = useRef(null);
 
     const submitHandler = async (values) => {
         const { username, email, password, confirmPassword, image } = values;
@@ -18,17 +21,22 @@ export default function Register() {
         if (password !== confirmPassword) {
             return alert('Password missmatch')
         }
-        try {
-            await registerHandler({ username, email, password, image });
-            navigate('/');
-        } catch (error) {
-            alert(error.message)
-        }
+
+        console.log(image);
+        
+        // try {
+        //     await registerHandler({ username, email, password, image });
+        //     navigate('/');
+        // } catch (error) {
+        //     alert(error.message)
+        // }
     }
 
     const {
         register,
-        formAction
+        imageUpload,
+        formAction,
+        imagePreview
     } = useForm(submitHandler, {
         username: '',
         email: '',
@@ -36,6 +44,10 @@ export default function Register() {
         password: '',
         confirmPassword: '',
     })
+
+    const triggerFileUpload = () => {
+        fileInputRef.current?.click();
+    }
 
     return (
         <div className="min-h-screen bg-[#15151e] flex items-center justify-center py-12 px-4 relative overflow-hidden">
@@ -75,7 +87,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Email */}
                         <div className="group">
                             <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Email Address</label>
                             <div className="relative">
@@ -89,21 +100,74 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Image URL */}
                         <div className="group">
-                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Avatar URL</label>
-                            <div className="relative">
-                                <Image size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
-                                <input
-                                    type="text"
-                                    {...register('image')}
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none focus:ring-2 focus:ring-[#e10600]/20 text-sm font-bold text-[#15151e] placeholder-gray-300 transition-all"
-                                    placeholder="HTTPS://..."
-                                />
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="block text-[10px] font-bold uppercase text-gray-400 tracking-wider group-focus-within:text-[#e10600] transition-colors">Avatar</label>
+
+                                <div className="flex bg-gray-100 p-0.5 rounded-sm">
+                                    <button
+                                        type="button"
+                                        onClick={() => setInputMethod('url')}
+                                        className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'url' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <LinkIcon size={10} /> URL
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setInputMethod('file')}
+                                        className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'file' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <Upload size={10} /> Upload
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 items-start">
+                                <div className="w-12 h-12 rounded-full bg-gray-100 flex-shrink-0 overflow-hidden border-2 border-gray-100 shadow-sm relative">
+                                    {imagePreview ? (
+                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <ImageIcon size={20} />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex-grow relative">
+                                    {inputMethod === 'url' ? (
+                                        <div className="relative">
+                                            <ImageIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                            <input
+                                                type="text"
+                                                {...register('image')}
+                                                className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none focus:ring-2 focus:ring-[#e10600]/20 text-sm font-bold text-[#15151e] placeholder-gray-300 transition-all"
+                                                placeholder="HTTPS://..."
+                                            />
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <input
+                                                type="file"
+                                                ref={fileInputRef}
+                                                className="hidden"
+                                                accept="image/*"
+                                                {...imageUpload('image')}
+                                            />
+                                            {/* <input type="text" {...register('image')} /> */}
+
+                                            <button
+                                                type="button"
+                                                onClick={triggerFileUpload}
+                                                className="w-full py-3 bg-gray-50 border-2 border-dashed border-gray-200 hover:border-[#e10600] hover:bg-[#e10600]/5 text-gray-400 hover:text-[#e10600] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 rounded-sm"
+                                            >
+                                                <Upload size={14} /> Choose Image
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Password */}
                         <div className="group">
                             <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Password</label>
                             <div className="relative">
@@ -117,7 +181,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Confirm Password */}
                         <div className="group">
                             <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Confirm Password</label>
                             <div className="relative">
@@ -133,7 +196,7 @@ export default function Register() {
 
                         <button
                             type="submit"
-                            className="w-full bg-[#15151e] text-white py-4 mt-4 font-black uppercase italic tracking-wider hover:bg-[#e10600] transition-all duration-300 group flex items-center justify-center gap-2"
+                            className="w-full bg-[#15151e] text-white py-4 mt-4 font-black uppercase italic tracking-wider hover:bg-[#e10600] transition-all duration-300 group flex items-center justify-center gap-2 shadow-lg shadow-red-500/20"
                         >
                             Create Account <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </button>
