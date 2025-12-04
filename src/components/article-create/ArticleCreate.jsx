@@ -69,7 +69,7 @@ export default function CreateArticle() {
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] pb-20">
-            <div className="bg-[#15151e] pt-24 pb-12 border-b-4 border-[#e10600]">
+            <div className="bg-[#15151e] pt-24 pb-6 border-b-4 border-[#e10600]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-end">
                     <div>
                         <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter mb-2">
@@ -82,7 +82,7 @@ export default function CreateArticle() {
                 </div>
             </div>
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
                 <form action={formAction} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div className="lg:col-span-8 space-y-6">
 
