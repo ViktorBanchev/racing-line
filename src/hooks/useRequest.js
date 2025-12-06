@@ -6,6 +6,7 @@ const baseUrl = 'http://localhost:3030'
 export default function useRequest(url, initialState) {
     const {isAuthenticated, user} = useContext(UserContext);
     const [data, setData] = useState(initialState);
+    const [isLoading, setIsLoading] = useState(true);
 
     async function request(url, method, data, config = {}) {
         let options = {}
@@ -40,20 +41,25 @@ export default function useRequest(url, initialState) {
         }
 
         const result = await response.json();
+        setIsLoading(false);
         return result;
     }
 
     useEffect(() => {
         if(!url) return;
         request(url)
-            .then(result => setData(result))
+            .then(result => {
+                setData(result);
+                setIsLoading(false);
+            })
             .catch(err => alert(err.message))
     }, [url])
 
     return {
         request,
         data,
-        setData
+        setData,
+        isLoading
     }
 }
 
