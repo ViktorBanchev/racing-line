@@ -1,18 +1,41 @@
 import { Link } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
-import { ChevronLeft, ChevronRight, Flag } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Flag, FileText } from 'lucide-react'
+import { useState } from 'react';
 
 export default function Home() {
     const urlParams = new URLSearchParams({
         load: `author=_ownerId:users`
     })
 
-    const { data: articles } = useRequest(`/data/articles?${urlParams}`, [])
+    const { data: articles, isLoading } = useRequest(`/data/articles?${urlParams}`, []);
+    const [filter, setFilter] = useState('all-news');
+
+    const filteredArticles = articles.filter(article => {
+        switch (filter) {
+            case 'all-news':
+                return true;
+            case 'race-reports':
+                return article.category === 'Race Reports'
+            case 'technical':
+                return article.category === 'Technical'
+            case 'driver-news':
+                return article.category === 'Driver News'
+            case 'team-news':
+                return article.category === 'Team News'
+            case 'interviews':
+                return article.category === 'Interviews'
+        }
+    })
+
+    const transformFilter = (category) => {
+        return (category.toLocaleLowerCase().split(' ').join('-'))
+    }
 
     return (
         <div className="min-h-screen bg-[#f8f9fa]">
-            
+
             {/* Hero Section */}
             <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-24 bg-[#15151e] overflow-hidden">
                 <div className="absolute top-0 right-0 w-2/3 h-full bg-[#1c1c26] transform skew-x-[-12deg] translate-x-24 z-0 hidden lg:block"></div>
@@ -60,7 +83,7 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            
+
                             <div className="order-1 lg:order-2 relative group">
                                 <div className="absolute inset-0 bg-[#e10600] transform translate-x-4 translate-y-4 rounded-lg hidden lg:block transition-transform group-hover:translate-x-6 group-hover:translate-y-6"></div>
                                 <div className="relative rounded-lg overflow-hidden shadow-2xl aspect-[16/10] lg:aspect-auto lg:h-[500px]">
@@ -81,11 +104,20 @@ export default function Home() {
             <div className="sticky top-[72px] z-40 bg-white/80 backdrop-blur-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-hide">
-                        <button className="flex-shrink-0 bg-[#15151e] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg shadow-gray-200">
+                        {/* <button className="flex-shrink-0 bg-[#15151e] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg shadow-gray-200">
                             All News
-                        </button>
-                        {['Race Reports', 'Technical', 'Driver News', 'Team News', 'Interviews'].map((cat) => (
-                            <button key={cat} className="flex-shrink-0 px-6 py-2 rounded-full text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-[#e10600] text-sm font-bold uppercase tracking-wide transition-all whitespace-nowrap">
+                        </button> */}
+
+                        {/* className="flex-shrink-0 bg-[#15151e] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg shadow-gray-200"
+                        className="flex-shrink-0 px-6 py-2 rounded-full\ text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-[#e10600] text-sm font-bold uppercase tracking-wide transition-all whitespace-nowrap" */}
+
+                        `
+
+                        {['All News', 'Race Reports', 'Technical', 'Driver News', 'Team News', 'Interviews'].map((cat) => (
+                            <button key={cat} onClick={() => setFilter(transformFilter(cat))} className={`flex-shrink-0 px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide ${filter === transformFilter(cat)
+                                ? 'bg-[#15151e] text-white shadow-gray-200'
+                                : 'text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-[#e10600]'
+                                }`}>
                                 {cat}
                             </button>
                         ))}
@@ -103,10 +135,22 @@ export default function Home() {
                         <div className="absolute inset-0 w-1/3 bg-[#e10600] skew-x-[-45deg]"></div>
                     </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12">
-                    {articles.map(article => <ArticleCard key={article._id} {...article} />)}
-                </div>
+                {
+                    isLoading ? (
+                        <div className="text-center py-20 text-gray-500 font-semibold uppercase tracking-widest animate-pulse">
+                            Loading Telemetry...
+                        </div>
+                    ) : filteredArticles.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-lg shadow-sm border border-gray-100">
+                            <FileText size={48} className="mx-auto mb-4 text-gray-300" />
+                            <p className="text-gray-600 font-medium">No {filter} articles found. Time to hit the track!</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12">
+                            {filteredArticles.map(article => <ArticleCard key={article._id} {...article} />)}
+                        </div>
+                    )
+                }
 
                 {/* Pagination */}
                 <div className="mt-20 flex justify-center">
