@@ -8,7 +8,6 @@ import Register from "./components/register/Register.jsx"
 import Login from "./components/login/Login.jsx"
 import Logout from "./components/logout/Logout.jsx"
 import MyArticles from "./components/my-articles/MyArticles.jsx"
-import Test from "./components/test/Test.jsx"
 import ArticleCreate from "./components/article-create/ArticleCreate.jsx"
 import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteGuard.jsx"
 import { useEffect, useLayoutEffect } from "react"
@@ -31,7 +30,6 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/articles/:articleId" element={<ArticleDetails />} />
-                <Route path="/test" element={<Test />} />
 
                 <Route element={<AuthRouteGuard />}>
                     <Route path="/logout" element={<Logout />} />

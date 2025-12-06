@@ -21,18 +21,39 @@ export default function Header() {
                         </div>
                     </Link>
 
-                    {/* Navigation */}
                     <nav className="hidden md:flex items-center gap-1">
-                        {['Home', 'Articles', 'About'].map((item) => (
-                            <Link
-                                key={item}
-                                to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                                className="relative px-5 py-2 text-gray-300 font-bold uppercase text-sm tracking-wide hover:text-white transition-colors overflow-hidden group"
-                            >
-                                <span className="relative z-10">{item}</span>
-                                <span className="absolute inset-0 bg-white/10 transform skew-x-[-20deg] translate-y-full transition-transform duration-300 group-hover:translate-y-0"></span>
-                            </Link>
-                        ))}
+                        <Link
+                            to='/'
+                            className="relative px-5 py-2 text-gray-300 font-bold uppercase text-sm tracking-wide hover:text-white transition-colors overflow-hidden group"
+                        >
+                            <span className="relative z-10">Home</span>
+                            <span className="absolute inset-0 bg-white/10 transform skew-x-[-20deg] translate-y-full transition-transform duration-300 group-hover:translate-y-0"></span>
+                        </Link>
+
+                        <Link
+                            to='/articles'
+                            className="relative px-5 py-2 text-gray-300 font-bold uppercase text-sm tracking-wide hover:text-white transition-colors overflow-hidden group"
+                        >
+                            <span className="relative z-10">Articles</span>
+                            <span className="absolute inset-0 bg-white/10 transform skew-x-[-20deg] translate-y-full transition-transform duration-300 group-hover:translate-y-0"></span>
+                        </Link>
+
+                        <Link
+                            to="/my-articles"
+                            className="relative px-5 py-2 text-gray-300 font-bold uppercase text-sm tracking-wide hover:text-white transition-colors overflow-hidden group"
+                        >
+                            <span className="relative z-10">My Paddock</span>
+                            <span className="absolute inset-0 bg-white/10 transform skew-x-[-20deg] translate-y-full transition-transform duration-300 group-hover:translate-y-0"></span>
+                        </Link>
+                        
+                        <Link
+                            to='/about'
+                            className="relative px-5 py-2 text-gray-300 font-bold uppercase text-sm tracking-wide hover:text-white transition-colors overflow-hidden group"
+                        >
+                            <span className="relative z-10">About</span>
+                            <span className="absolute inset-0 bg-white/10 transform skew-x-[-20deg] translate-y-full transition-transform duration-300 group-hover:translate-y-0"></span>
+                        </Link>
+
                     </nav>
 
                     {/* Auth Buttons */}
