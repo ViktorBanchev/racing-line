@@ -114,9 +114,10 @@ export default function CreateArticle() {
                                         >
                                             <option value="">Select Category...</option>
                                             <option value="Race Report">Race Report</option>
-                                            <option value="Technical">Technical Analysis</option>
-                                            <option value="Opinion">Opinion</option>
+                                            <option value="Technical">Technical</option>
                                             <option value="Driver News">Driver News</option>
+                                            <option value="Team News">Team News</option>
+                                            <option value="Interviews">Interviews</option>
                                         </select>
                                     </div>
 
