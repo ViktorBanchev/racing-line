@@ -1,91 +1,87 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router';
 import UserContext from '../../contexts/userContext.jsx';
 import useRequest from '../../hooks/useRequest.js';
 import ArticleCard from './ArticleCard.jsx';
+import { FileText, Calendar } from 'lucide-react';
 
 export default function MyArticles() {
-    const {user} = useContext(UserContext)
+    const { user } = useContext(UserContext)
 
     const urlParams = new URLSearchParams({
         where: `_ownerId="${user?._id}"`
     })
 
-     const { data: articles } = useRequest(`/data/articles?${urlParams.toString()}`, []);
-     console.log(articles);
+    const { data: articles,
+        request,
+        setData,
+        isLoading
+    } = useRequest(`/data/articles?${urlParams.toString()}`, []);
+
+    const [filter, setFilter] = useState('all'); // 'all', 'published', 'draft'
+
+    const filteredArticles = articles.filter(article => {
+        if (filter === 'all') return true;
+        if (filter === 'published') return article.status === 'Published';
+        if (filter === 'draft') return article.status === 'Draft';
+        return false;
+    });
+
+    const deleteHandler = async (articleId) => {
+        const result = await request(`/data/articles/${articleId}`, 'DELETE', null);
+        setData(state => state.filter(todo => todo._id !== articleId));
+    }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="min-h-screen bg-[#f3f4f6] pb-20">
 
-                {/* Header */}
-                <div className="flex justify-between items-center mb-8">
+            {/* --- HEADER --- */}
+            <div className="bg-[#15151e] pt-24 pb-6 border-b-4 border-[#e10600]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-end">
                     <div>
-                        <h1 className="text-4xl font-bold mb-2">My Articles</h1>
-                        <p className="text-gray-600">Manage your published articles</p>
+                        <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter mb-1">
+                            My <span className="text-[#e10600]">Paddock</span>
+                        </h1>
+                        <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+                            Manage Your Articles
+                        </p>
                     </div>
+                </div>
+            </div>
+
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+
+                {/* Filter and Action Bar */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                     <Link
                         to="/articles/create"
-                        className="bg-[#e10600] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#c10500] transition-all hover:shadow-lg hover:shadow-[#e10600]/30"
+                        className="flex items-center gap-2 bg-[#15151e] text-white px-5 py-2 font-bold uppercase text-xs tracking-wider rounded-sm hover:bg-[#e10600] transition-colors"
                     >
-                        + Write New Article
+                        <FileText size={16} /> Write New Article
                     </Link>
                 </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div className="bg-white rounded-xl p-6 shadow-md">
-                        <div className="text-3xl font-bold text-[#e10600] mb-2">12</div>
-                        <div className="text-gray-600 font-medium">Total Articles</div>
+                {isLoading ? (
+                    <div className="text-center py-20 text-gray-500 font-semibold uppercase tracking-widest animate-pulse">
+                        Loading Telemetry...
                     </div>
-                    <div className="bg-white rounded-xl p-6 shadow-md">
-                        <div className="text-3xl font-bold text-[#e10600] mb-2">1,234</div>
-                        <div className="text-gray-600 font-medium">Total Views</div>
+                ) : articles.length === 0 ? (
+                    <div className="text-center py-20 bg-white rounded-lg shadow-sm border border-gray-100">
+                        <FileText size={48} className="mx-auto mb-4 text-gray-300" />
+                        <p className="text-gray-600 font-medium">No articles found. Time to hit the track!</p>
                     </div>
-                    <div className="bg-white rounded-xl p-6 shadow-md">
-                        <div className="text-3xl font-bold text-[#e10600] mb-2">156</div>
-                        <div className="text-gray-600 font-medium">Total Likes</div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-4">
+                        {filteredArticles.map(article => (
+                            <ArticleCard
+                                key={article._id}
+                                {...article}
+                                onDelete={deleteHandler}
+                            />
+                        ))}
                     </div>
-                    <div className="bg-white rounded-xl p-6 shadow-md">
-                        <div className="text-3xl font-bold text-[#e10600] mb-2">48</div>
-                        <div className="text-gray-600 font-medium">Total Comments</div>
-                    </div>
-                </div>
-
-                {/* Articles List */}
-                <div className="bg-white rounded-xl shadow-md overflow-hidden">
-
-                    {/* Table Header */}
-                    <div className="hidden md:grid md:grid-cols-12 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold text-gray-700 text-sm">
-                        <div className="col-span-5">Article</div>
-                        <div className="col-span-2">Category</div>
-                        <div className="col-span-1 text-center">Views</div>
-                        <div className="col-span-1 text-center">Likes</div>
-                        <div className="col-span-1 text-center">Comments</div>
-                        <div className="col-span-2 text-right">Actions</div>
-                    </div>
-
-                    {/* Article Rows */}
-                    <div className="divide-y divide-gray-200">
-                        {articles.map(article => <ArticleCard key={article._id} {...article} />)}
-                    </div>
-
-                </div>
-
-                {/* Empty State (show when no articles) */}
-                {/* <div className="bg-white rounded-xl shadow-md p-12 text-center">
-          <div className="text-6xl mb-4">📝</div>
-          <h2 className="text-2xl font-bold mb-3">No Articles Yet</h2>
-          <p className="text-gray-600 mb-6">Start sharing your F1 insights with the community</p>
-          <Link
-            to="/articles/create"
-            className="inline-block bg-[#e10600] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#c10500] transition-all"
-          >
-            Write Your First Article
-          </Link>
-        </div> */}
-
-            </div>
+                )}
+            </main>
         </div>
     );
 }
