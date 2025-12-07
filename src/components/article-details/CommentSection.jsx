@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useForm from "../../hooks/useForm.js";
 import useRequest from "../../hooks/useRequest.js";
+import UserContext from "../../contexts/userContext.jsx";
 
 export default function CommentSection({ articleId }) {
     // const [comments, setComments] = useState([]);
-    
-    //!! FIX ISSUE --> Name doesn't appear after creating comments. Appears only after page refresh!!!!!
+    const { user } = useContext(UserContext);
 
     const formRef = useRef();
     const urlParams = new URLSearchParams({
@@ -23,7 +23,12 @@ export default function CommentSection({ articleId }) {
         }
         try {
             const result = await request('/data/comments', "POST", newComment);
-            setComments(state => [...state, result]);
+            setComments(state => [...state, {
+                ...result,
+                'author': {
+                    'username': user.username
+                }
+            }]);
             resetForm();
         } catch (err) {
             alert(err.message);

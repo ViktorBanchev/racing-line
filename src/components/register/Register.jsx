@@ -24,12 +24,12 @@ export default function Register() {
 
         console.log(image);
         
-        // try {
-        //     await registerHandler({ username, email, password, image });
-        //     navigate('/');
-        // } catch (error) {
-        //     alert(error.message)
-        // }
+        try {
+            await registerHandler({ username, email, password, image });
+            navigate('/');
+        } catch (error) {
+            alert(error.message)
+        }
     }
 
     const {
