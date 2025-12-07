@@ -1,5 +1,5 @@
 
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
 import { Calendar, Clock, User, MessageCircle, Share2, Bookmark, Heart, ChevronRight, Edit3, Trash2, Flag, BarChart2, TrendingUp } from 'lucide-react';
@@ -11,15 +11,20 @@ import DOMPurify from 'dompurify';
 
 export default function ArticleDetails() {
     const { articleId } = useParams();
+    const navigate = useNavigate();
     const { user } = useContext(UserContext);
     const urlParams = new URLSearchParams({
         load: `author=_ownerId:users`
     })
 
-    const { data: article } = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
+    const { data: article, request, setData } = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
 
     if (!article || !article.title) return <div className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading Paddock Data...</div>;
 
+    const deleteHandler = async () => {
+        const result = await request(`/data/articles/${articleId}`, 'DELETE', null);
+        navigate('/')
+    }
 
     return (
         <div className="min-h-screen bg-white text-[#15151e]">
@@ -105,7 +110,7 @@ export default function ArticleDetails() {
                                     <Link to={`/articles/edit/${articleId}`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
                                         <Edit3 size={14} /> Edit
                                     </Link>
-                                    <button className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                    <button onClick={deleteHandler} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
                                         <Trash2 size={14} /> Delete
                                     </button>
                                 </div>

@@ -1,10 +1,9 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import useForm from "../../hooks/useForm.js";
 import useRequest from "../../hooks/useRequest.js";
 import UserContext from "../../contexts/userContext.jsx";
 
 export default function CommentSection({ articleId }) {
-    // const [comments, setComments] = useState([]);
     const { user } = useContext(UserContext);
 
     const formRef = useRef();
