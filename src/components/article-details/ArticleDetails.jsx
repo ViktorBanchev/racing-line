@@ -17,12 +17,12 @@ export default function ArticleDetails() {
         load: `author=_ownerId:users`
     })
 
-    const { data: article, request, setData } = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
+    const { data: article, request } = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
 
     if (!article || !article.title) return <div className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading Paddock Data...</div>;
 
     const deleteHandler = async () => {
-        const result = await request(`/data/articles/${articleId}`, 'DELETE', null);
+        await request(`/data/articles/${articleId}`, 'DELETE', null);
         navigate('/')
     }
 

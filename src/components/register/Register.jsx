@@ -3,6 +3,8 @@ import useForm from "../../hooks/useForm.js";
 import { useContext, useRef, useState } from "react";
 import UserContext from "../../contexts/userContext.jsx";
 import { User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload } from 'lucide-react';
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../../firebase.js";
 
 export default function Register() {
     const { registerHandler } = useContext(UserContext)
@@ -12,7 +14,8 @@ export default function Register() {
     const fileInputRef = useRef(null);
 
     const submitHandler = async (values) => {
-        const { username, email, password, confirmPassword, image } = values;
+        const { username, email, password, confirmPassword } = values;
+        let image = values['image'];
 
         if (!email || !password) {
             return alert('email or password missing')
@@ -20,9 +23,13 @@ export default function Register() {
 
         if (password !== confirmPassword) {
             return alert('Password missmatch')
-        }
+        }   
 
-        console.log(image);
+        if (image instanceof File) {
+            const imageRef = ref(storage, `images/${username}`);
+            await uploadBytes(imageRef, image);
+            image = await getDownloadURL(imageRef)
+        }
         
         try {
             await registerHandler({ username, email, password, image });
@@ -34,7 +41,7 @@ export default function Register() {
 
     const {
         register,
-        imageUpload,
+        imageUploadRegister,
         formAction,
         imagePreview
     } = useForm(submitHandler, {
@@ -151,7 +158,7 @@ export default function Register() {
                                                 ref={fileInputRef}
                                                 className="hidden"
                                                 accept="image/*"
-                                                {...imageUpload('image')}
+                                                {...imageUploadRegister('image')}
                                             />
                                             {/* <input type="text" {...register('image')} /> */}
 
