@@ -3,8 +3,7 @@ import useForm from "../../hooks/useForm.js";
 import { useContext, useRef, useState } from "react";
 import UserContext from "../../contexts/userContext.jsx";
 import { User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload } from 'lucide-react';
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../../../firebase.js";
+
 
 export default function Register() {
     const { registerHandler } = useContext(UserContext)
@@ -14,8 +13,7 @@ export default function Register() {
     const fileInputRef = useRef(null);
 
     const submitHandler = async (values) => {
-        const { username, email, password, confirmPassword } = values;
-        let image = values['image'];
+        const { username, email, password, confirmPassword, image } = values;
 
         if (!email || !password) {
             return alert('email or password missing')
@@ -23,12 +21,6 @@ export default function Register() {
 
         if (password !== confirmPassword) {
             return alert('Password missmatch')
-        }   
-
-        if (image instanceof File) {
-            const imageRef = ref(storage, `images/${username}`);
-            await uploadBytes(imageRef, image);
-            image = await getDownloadURL(imageRef)
         }
         
         try {

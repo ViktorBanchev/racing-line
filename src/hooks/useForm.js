@@ -1,4 +1,7 @@
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
+import { storage } from "../../firebase.js";
+import { v4 as uuid } from "uuid";
 
 export default function useForm(callback, initialValues) {
     const [values, setValues] = useState(initialValues);
@@ -13,9 +16,11 @@ export default function useForm(callback, initialValues) {
                 const objectUrl = URL.createObjectURL(file);
                 setImagePreview(objectUrl);
 
+                const imageUrl = await uploadImageToFirebase(file);
+
                 setValues(state => ({
                     ...state,
-                    'image': file
+                    'image': imageUrl
                 }));
             }
         }
@@ -32,6 +37,7 @@ export default function useForm(callback, initialValues) {
         await callback(values, formData);
         URL.revokeObjectURL(imagePreview);
     }
+
 
     const register = (fieldname) => {
         return {
@@ -51,6 +57,25 @@ export default function useForm(callback, initialValues) {
         setValues(initialValues)
     }
 
+    const uploadImageToFirebase = async (file) => {
+        let finalImageUrl = '';
+        try {
+            const imageRef = ref(storage, `images/${uuid()}`);
+            await uploadBytes(imageRef, file);
+            finalImageUrl = await getDownloadURL(imageRef);
+
+        } catch (error) {
+            console.error("Upload failed:", error);
+            setImagePreview('');
+            finalImageUrl = '';
+
+        } finally {
+            setValues(state => ({ ...state, 'image': finalImageUrl }));
+        }
+
+        return finalImageUrl;
+    }
+
     return {
         values,
         imageUploadRegister,
@@ -58,6 +83,6 @@ export default function useForm(callback, initialValues) {
         resetForm,
         register,
         formAction,
-        imagePreview
+        imagePreview,
     }
 }
