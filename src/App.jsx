@@ -8,9 +8,9 @@ import Register from "./components/register/Register.jsx"
 import Login from "./components/login/Login.jsx"
 import Logout from "./components/logout/Logout.jsx"
 import MyArticles from "./components/my-articles/MyArticles.jsx"
-import ArticleCreate from "./components/article-create/ArticleCreate.jsx"
+import ArticleForm from "./components/article-create/ArticleForm.jsx"
 import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteGuard.jsx"
-import { useEffect, useLayoutEffect } from "react"
+import { useLayoutEffect } from "react"
 
 const Wrapper = ({ children }) => {
     const { pathname } = useLocation();
@@ -34,7 +34,8 @@ function App() {
                 <Route element={<AuthRouteGuard />}>
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/my-articles" element={<MyArticles />} />
-                    <Route path="/articles/create" element={<ArticleCreate />} />
+                    <Route path="/articles/create" element={<ArticleForm mode={'create'} />} />
+                    <Route path="/articles/:articleId/edit" element={<ArticleForm mode={'edit'} />} />
                 </Route>
 
                 <Route element={<GuestRouteGuard />}>
