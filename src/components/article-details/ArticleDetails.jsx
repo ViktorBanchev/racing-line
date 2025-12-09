@@ -1,33 +1,22 @@
 import { Link, useNavigate, useParams } from 'react-router';
-import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
 import {
-    Calendar,
-    Clock,
-    User,
-    MessageCircle,
-    Share2,
-    Bookmark,
     Heart,
-    ChevronRight,
     Edit3,
     Trash2,
-    Flag,
-    BarChart2,
-    TrendingUp, HeartIcon
+    TrendingUp,
 } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import UserContext from '../../contexts/userContext.jsx';
 import CommentSection from './CommentSection.jsx';
-
 import DOMPurify from 'dompurify';
-import { toast } from 'react-toastify';
+import useArticleLikes from '../../hooks/useArticleLikes.js';
+import Socials from './social/Socials.jsx';
 
 export default function ArticleDetails() {
     const { articleId } = useParams();
     const navigate = useNavigate();
     const { user, isAuthenticated } = useContext(UserContext);
-
 
     const urlParams = new URLSearchParams({
         load: `author=_ownerId:users`
@@ -39,8 +28,7 @@ export default function ArticleDetails() {
         setData: setArticle
     } = useRequest(`/data/articles/${articleId}?${urlParams}`, { likedBy: [], author: {} })
 
-    const isLiked = article.likedBy?.includes(user?._id);
-    console.log(isLiked)
+    const validArticleId = typeof article._id === "string" ? article._id : null;
 
     if (!article || !article.title) return <div
         className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading
@@ -49,23 +37,6 @@ export default function ArticleDetails() {
     const deleteHandler = async () => {
         await request(`/data/articles/${articleId}`, 'DELETE', null);
         navigate('/')
-    }
-
-    const likeHandler = async () => {
-        if (!isAuthenticated) {
-            return toast.info('You need to be logged in to like articles.');
-        }
-        const newLikedBy = isLiked
-            ? article.likedBy.filter(id => id !== user._id)
-            : [...article.likedBy, user._id]
-
-        const body = { likedBy: newLikedBy }
-
-        const result = await request(`/data/articles/${articleId}`, 'PATCH', body);
-
-        const updatedArticle = { ...article, ...result }
-
-        setArticle(updatedArticle);
     }
 
     return (
@@ -116,22 +87,7 @@ export default function ArticleDetails() {
                         </div>
 
                         {/* Social / Actions */}
-                        <div className="flex items-center gap-4 text-gray-400">
-                            <button
-                                onClick={likeHandler}
-                                className={`
-                                    flex items-center gap-1.5 font-bold transition-all 
-                                    ${isLiked
-                                        ? 'text-[#e10600] transform scale-110' // Active/Liked state classes
-                                        : 'text-gray-400 hover:text-[#e10600]'}`}>
-                                <Heart
-                                    size={20}
-                                    // Fill the heart icon solid red when isLiked
-                                    fill={isLiked ? '#e10600' : 'none'}
-                                />
-                                {article.likedBy.length}
-                            </button>
-                        </div>
+                        <Socials articleId={article._id} />
                     </div>
                 </header>
 
