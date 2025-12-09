@@ -1,9 +1,9 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router';
 import UserContext from '../../contexts/userContext.jsx';
 import useRequest from '../../hooks/useRequest.js';
 import ArticleCard from './ArticleCard.jsx';
-import { FileText, Calendar } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 export default function MyArticles() {
     const { user } = useContext(UserContext)
@@ -19,7 +19,7 @@ export default function MyArticles() {
     } = useRequest(`/data/articles?${urlParams.toString()}`, []);
 
     const deleteHandler = async (articleId) => {
-        const result = await request(`/data/articles/${articleId}`, 'DELETE', null);
+        await request(`/data/articles/${articleId}`, 'DELETE', null);
         setData(state => state.filter(todo => todo._id !== articleId));
     }
 
@@ -63,7 +63,7 @@ export default function MyArticles() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-4">
-                        {filteredArticles.map(article => (
+                        {articles.map(article => (
                             <ArticleCard
                                 key={article._id}
                                 {...article}
