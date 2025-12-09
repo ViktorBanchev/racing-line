@@ -1,26 +1,25 @@
-import {createBrowserRouter, Link, useNavigate, useParams} from 'react-router';
-import {FileText} from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router';
+import { FileText } from 'lucide-react';
 import useForm from '../../hooks/useForm.js';
 import useRequest from '../../hooks/useRequest.js';
 
 // Tiptap Imports
-import {useEditor, EditorContent} from '@tiptap/react';
+import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
 import LinkExtension from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import MenuBar from './tiptap/MenuBar.jsx';
 import RightSidebar from './right-sidebar/RightSidebar.jsx';
-import {useEffect} from "react";
-import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
+import { useEffect } from "react";
+import { toast } from 'react-toastify';
 
 export default function ArticleForm({
-                                        mode
-                                    }) {
+    mode
+}) {
     const navigate = useNavigate();
-    const {showNotification} = useNotificationsContext()
-    const {articleId} = useParams();
-    const {request} = useRequest();
+    const { articleId } = useParams();
+    const { request } = useRequest();
 
     const submitAction = async (values) => {
         if (!editor) return;
@@ -32,19 +31,19 @@ export default function ArticleForm({
         };
 
         if (!articleData.title) {
-            return showNotification('Title is required', 'error');
+            return toast.error('Title is required');
         }
 
         if (!articleData.category) {
-            return showNotification('Category is required', 'error');
+            return toast.error('Category is required');
         }
 
         if (!articleData.image) {
-            return showNotification('Image is required', 'error');
+            return toast.error('Image is required');
         }
 
         if (editor.isEmpty) {
-            return showNotification('Article content can not be empty', 'error');
+            return toast.error('Article content can not be empty');
         }
 
         try {
@@ -58,11 +57,11 @@ export default function ArticleForm({
             }
             navigate("/");
         } catch (error) {
-            showNotification("Failed to publish article: " + error.message, "error");
+            toast("Failed to publish article: " + error.message);
         }
     }
 
-    const {register, formAction, imagePreview, setValues} = useForm(submitAction, {
+    const { register, formAction, imagePreview, setValues } = useForm(submitAction, {
         title: '', category: '', image: '',
     });
 
@@ -122,7 +121,7 @@ export default function ArticleForm({
                         {/* 1. Meta Data Card */}
                         <div className="bg-white p-6 shadow-md rounded-sm border-l-4 border-[#15151e]">
                             <h3 className="text-xs font-black uppercase text-gray-400 mb-4 tracking-widest flex items-center gap-2">
-                                <FileText size={14}/> Basic Telemetry
+                                <FileText size={14} /> Basic Telemetry
                             </h3>
 
                             <div className="space-y-6">
@@ -163,7 +162,7 @@ export default function ArticleForm({
                                             className="w-full bg-gray-50 font-medium text-sm text-gray-700 border border-gray-200 rounded-sm px-3 py-2 focus:border-[#e10600] focus:ring-0"
                                             placeholder="https://..."
                                             {...register('image')}
-                                            // onChange={(e) => setImagePreview(e.target.value)}
+                                        // onChange={(e) => setImagePreview(e.target.value)}
                                         />
                                     </div>
                                 </div>
@@ -175,11 +174,11 @@ export default function ArticleForm({
                             className="bg-white shadow-xl rounded-sm flex flex-col min-h-[600px] border border-gray-200">
 
                             {/* Toolbar Component */}
-                            <MenuBar editor={editor}/>
+                            <MenuBar editor={editor} />
 
                             {/* Editor Content Area */}
                             <div className="flex-grow bg-white cursor-text">
-                                <EditorContent editor={editor}/>
+                                <EditorContent editor={editor} />
                             </div>
 
                             {/* Footer Status */}
@@ -195,7 +194,7 @@ export default function ArticleForm({
                         {/* Action Buttons */}
                         <div className="flex justify-end gap-4 pt-4">
                             <Link to="/"
-                                  className="px-6 py-3 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-xs tracking-wider rounded-sm hover:bg-gray-50 transition-colors">
+                                className="px-6 py-3 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-xs tracking-wider rounded-sm hover:bg-gray-50 transition-colors">
                                 Abort
                             </Link>
                             <button
@@ -207,7 +206,7 @@ export default function ArticleForm({
                         </div>
                     </div>
 
-                    <RightSidebar imagePreview={imagePreview}/>
+                    <RightSidebar imagePreview={imagePreview} />
                 </form>
             </main>
         </div>

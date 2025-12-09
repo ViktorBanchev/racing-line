@@ -3,13 +3,12 @@ import useForm from "../../hooks/useForm.js";
 import {useContext, useRef, useState} from "react";
 import UserContext from "../../contexts/userContext.jsx";
 import {User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload} from 'lucide-react';
-import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
+import { toast } from "react-toastify";
 
 
 export default function Register() {
     const {registerHandler} = useContext(UserContext)
     const navigate = useNavigate();
-    const {showNotification} = useNotificationsContext()
 
     const [inputMethod, setInputMethod] = useState('url'); // 'url' | 'file'
     const fileInputRef = useRef(null);
@@ -18,22 +17,22 @@ export default function Register() {
         const {username, email, password, confirmPassword, image} = values;
 
         if (!username) {
-            return showNotification('Username is required!', 'error');
+            return toast.error('Username is required!');
         }
 
         if (!email || !password) {
-            return showNotification('Email or Password is missing!', 'error');
+            return toast.error('Email or Password is missing!');
         }
 
         if (password !== confirmPassword) {
-            return showNotification('Password mismatch!', 'error');
+            return toast.error('Password mismatch!');
         }
 
         try {
             await registerHandler({username, email, password, image});
             navigate('/');
         } catch (error) {
-            showNotification(`Error while registering user: ${error.message}`, 'error');
+            toast.error(`Error while registering user: ${error.message}`);
         }
     }
 

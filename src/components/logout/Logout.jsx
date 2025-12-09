@@ -1,16 +1,15 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router";
 import UserContext from "../../contexts/userContext.jsx";
-import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
+import { toast } from "react-toastify";
 
 export default function Logout() {
     const navigate = useNavigate();
-    const {showNotification} = useNotificationsContext()
     const {logoutHandler} = useContext(UserContext);
     logoutHandler()
         .then(() => navigate('/'))
-        .catch((err) => {
-            showNotification('Problem with logout!', 'error');
+        .catch(() => {
+            toast.error('Problem with logout!');
             navigate('/');
         })
 
