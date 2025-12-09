@@ -12,7 +12,7 @@ export default function CommentSection({ articleId }) {
         where: `_articleId="${articleId}"`,
         load: `author=_ownerId:users`
     })
-    const { request, data: comments, setData: setComments } = useRequest(`/data/comments?${urlParams}`, []);
+    const { request, data: comments, setData: setComments } = useRequest(`/data/comments?${urlParams}`, [], { noAuth: true });
     const [optimisticComments, setOptimisticComments] = useOptimistic(comments, (state, action) => [...state, action])
 
     const submitCommentHandler = async (values) => {
