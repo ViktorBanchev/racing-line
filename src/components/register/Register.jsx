@@ -30,6 +30,7 @@ export default function Register() {
 
         try {
             await registerHandler({username, email, password, image});
+            toast.success('Registration successful!', {autoClose: 2000});
             navigate('/');
         } catch (error) {
             toast.error(`Error while registering user: ${error.message}`);

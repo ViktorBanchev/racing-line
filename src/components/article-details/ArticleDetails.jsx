@@ -1,4 +1,4 @@
-import {Link, useNavigate, useParams} from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
 import {
@@ -16,16 +16,17 @@ import {
     BarChart2,
     TrendingUp, HeartIcon
 } from 'lucide-react';
-import {useContext, useState} from 'react';
+import { useContext } from 'react';
 import UserContext from '../../contexts/userContext.jsx';
 import CommentSection from './CommentSection.jsx';
 
 import DOMPurify from 'dompurify';
+import { toast } from 'react-toastify';
 
 export default function ArticleDetails() {
-    const {articleId} = useParams();
+    const { articleId } = useParams();
     const navigate = useNavigate();
-    const {user} = useContext(UserContext);
+    const { user, isAuthenticated } = useContext(UserContext);
 
 
     const urlParams = new URLSearchParams({
@@ -36,7 +37,7 @@ export default function ArticleDetails() {
         data: article,
         request,
         setData: setArticle
-    } = useRequest(`/data/articles/${articleId}?${urlParams}`, {likedBy: [], author: {}})
+    } = useRequest(`/data/articles/${articleId}?${urlParams}`, { likedBy: [], author: {} })
 
     const isLiked = article.likedBy?.includes(user?._id);
     console.log(isLiked)
@@ -51,25 +52,26 @@ export default function ArticleDetails() {
     }
 
     const likeHandler = async () => {
+        if (!isAuthenticated) {
+            return toast.info('You need to be logged in to like articles.');
+        }
         const newLikedBy = isLiked
             ? article.likedBy.filter(id => id !== user._id)
             : [...article.likedBy, user._id]
 
-        const body = {likedBy: newLikedBy}
+        const body = { likedBy: newLikedBy }
 
         const result = await request(`/data/articles/${articleId}`, 'PATCH', body);
 
-        const updatedArticle = {...article, ...result}
+        const updatedArticle = { ...article, ...result }
 
         setArticle(updatedArticle);
     }
 
     return (
         <div className="min-h-screen bg-white text-[#15151e]">
-
             {/* Main Content Wrapper */}
             <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
-                <Heart/>
                 {/* --- HEADER SECTION (News Style) --- */}
                 <header className="max-w-4xl mx-auto mb-10">
 
@@ -115,18 +117,13 @@ export default function ArticleDetails() {
 
                         {/* Social / Actions */}
                         <div className="flex items-center gap-4 text-gray-400">
-                            <div
-                                className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider mr-2 hidden sm:flex">
-                                <MessageCircle size={16}/> <span>12 Comments</span>
-                            </div>
-                            <button className="hover:text-[#e10600] transition-colors"><Share2 size={20}/></button>
                             <button
                                 onClick={likeHandler}
                                 className={`
                                     flex items-center gap-1.5 font-bold transition-all 
                                     ${isLiked
-                                    ? 'text-[#e10600] transform scale-110' // Active/Liked state classes
-                                    : 'text-gray-400 hover:text-[#e10600]'}`}>
+                                        ? 'text-[#e10600] transform scale-110' // Active/Liked state classes
+                                        : 'text-gray-400 hover:text-[#e10600]'}`}>
                                 <Heart
                                     size={20}
                                     // Fill the heart icon solid red when isLiked
@@ -165,12 +162,12 @@ export default function ArticleDetails() {
                             ? (
                                 <div className="flex gap-2 mb-6">
                                     <Link to={`/articles/${articleId}/edit`}
-                                          className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
-                                        <Edit3 size={14}/> Edit
+                                        className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                        <Edit3 size={14} /> Edit
                                     </Link>
                                     <button onClick={deleteHandler}
-                                            className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
-                                        <Trash2 size={14}/> Delete
+                                        className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                        <Trash2 size={14} /> Delete
                                     </button>
                                 </div>
                             ) : ''
@@ -182,7 +179,7 @@ export default function ArticleDetails() {
                             prose-a:text-[#e10600] prose-a:font-bold prose-a:no-underline hover:prose-a:underline 
                             prose-img:rounded-sm prose-blockquote:border-l-[#e10600] prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4">
 
-                            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.content)}}/>
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
                         </article>
 
                         {/* Article Footer / Tags */}
@@ -192,7 +189,7 @@ export default function ArticleDetails() {
                             <div className="flex flex-wrap gap-2">
                                 {['Red Bull Racing', 'Max Verstappen', 'Qualifying', 'Monza'].map(tag => (
                                     <span key={tag}
-                                          className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-[#15151e] hover:text-white transition-colors cursor-pointer rounded-sm">
+                                        className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-[#15151e] hover:text-white transition-colors cursor-pointer rounded-sm">
                                         {tag}
                                     </span>
                                 ))}
@@ -200,7 +197,7 @@ export default function ArticleDetails() {
                         </div>
 
                         {/* Comments Section (Simplified) */}
-                        <CommentSection articleId={articleId}/>
+                        <CommentSection articleId={articleId} />
                     </div>
 
                     {/* Right Column: Sidebar (Standard) */}
@@ -210,7 +207,7 @@ export default function ArticleDetails() {
                         <div className="bg-white border border-gray-200 p-0 rounded-sm">
                             <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h4 className="text-sm font-black uppercase italic tracking-tighter text-[#15151e] flex items-center gap-2">
-                                    <TrendingUp size={16} className="text-[#e10600]"/> Most Read
+                                    <TrendingUp size={16} className="text-[#e10600]" /> Most Read
                                 </h4>
                             </div>
                             <div className="divide-y divide-gray-100">

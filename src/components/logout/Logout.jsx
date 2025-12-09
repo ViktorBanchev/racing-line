@@ -7,7 +7,10 @@ export default function Logout() {
     const navigate = useNavigate();
     const {logoutHandler} = useContext(UserContext);
     logoutHandler()
-        .then(() => navigate('/'))
+        .then(() => {
+            navigate('/')
+            toast.success('Logout successful!', {autoClose: 2000});
+        })
         .catch(() => {
             toast.error('Problem with logout!');
             navigate('/');

@@ -26,6 +26,8 @@ export default function ArticleForm({
 
         const articleData = {
             ...values,
+            likedBy: [],
+            views: 0,
             content: editor.getHTML(), // Get the HTML content from Tiptap
             plainText: editor.getText(), // Optional: for search indexing or snippets
         };
@@ -55,6 +57,7 @@ export default function ArticleForm({
                     await request('/data/articles', 'POST', articleData);
                     break;
             }
+            toast.success(`Article ${mode === 'create' ? 'published' : 'edited'} successfully!`);
             navigate("/");
         } catch (error) {
             toast("Failed to publish article: " + error.message);

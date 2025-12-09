@@ -18,6 +18,7 @@ export default function Login() {
 
         try {
             await loginHandler({ email, password });
+            toast.success('Login successful!', {autoClose: 2000});
             navigate('/');
         } catch (error) {
             toast.error(error.message);
