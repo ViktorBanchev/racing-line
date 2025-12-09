@@ -18,15 +18,6 @@ export default function MyArticles() {
         isLoading
     } = useRequest(`/data/articles?${urlParams.toString()}`, []);
 
-    const [filter, setFilter] = useState('all'); // 'all', 'published', 'draft'
-
-    const filteredArticles = articles.filter(article => {
-        if (filter === 'all') return true;
-        if (filter === 'published') return article.status === 'Published';
-        if (filter === 'draft') return article.status === 'Draft';
-        return false;
-    });
-
     const deleteHandler = async (articleId) => {
         const result = await request(`/data/articles/${articleId}`, 'DELETE', null);
         setData(state => state.filter(todo => todo._id !== articleId));

@@ -11,7 +11,7 @@ import LinkExtension from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import MenuBar from './tiptap/MenuBar.jsx';
 import RightSidebar from './right-sidebar/RightSidebar.jsx';
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
 
 export default function ArticleForm({
