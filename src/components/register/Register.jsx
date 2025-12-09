@@ -1,33 +1,39 @@
-import { Link, useNavigate } from "react-router";
+import {Link, useNavigate} from "react-router";
 import useForm from "../../hooks/useForm.js";
-import { useContext, useRef, useState } from "react";
+import {useContext, useRef, useState} from "react";
 import UserContext from "../../contexts/userContext.jsx";
-import { User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload } from 'lucide-react';
+import {User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload} from 'lucide-react';
+import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
 
 
 export default function Register() {
-    const { registerHandler } = useContext(UserContext)
+    const {registerHandler} = useContext(UserContext)
     const navigate = useNavigate();
+    const {showNotification} = useNotificationsContext()
 
     const [inputMethod, setInputMethod] = useState('url'); // 'url' | 'file'
     const fileInputRef = useRef(null);
 
     const submitHandler = async (values) => {
-        const { username, email, password, confirmPassword, image } = values;
+        const {username, email, password, confirmPassword, image} = values;
+
+        if (!username) {
+            return showNotification('Username is required!', 'error');
+        }
 
         if (!email || !password) {
-            return alert('email or password missing')
+            return showNotification('Email or Password is missing!', 'error');
         }
 
         if (password !== confirmPassword) {
-            return alert('Password missmatch')
+            return showNotification('Password mismatch!', 'error');
         }
-        
+
         try {
-            await registerHandler({ username, email, password, image });
+            await registerHandler({username, email, password, image});
             navigate('/');
         } catch (error) {
-            alert(error.message)
+            showNotification(`Error while registering user: ${error.message}`, 'error');
         }
     }
 
@@ -52,11 +58,15 @@ export default function Register() {
         <div className="min-h-screen bg-[#15151e] flex items-center justify-center py-12 px-4 relative overflow-hidden">
             {/* Background Aesthetics */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#e10600] opacity-10 rounded-full blur-[100px]"></div>
-                <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div
+                    className="absolute -top-20 -right-20 w-96 h-96 bg-[#e10600] opacity-10 rounded-full blur-[100px]"></div>
+                <div
+                    className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/50 to-transparent"></div>
                 {/* Racing Stripes */}
-                <div className="absolute top-0 left-1/4 w-32 h-full bg-white/5 skew-x-[-12deg] transform -translate-x-1/2"></div>
-                <div className="absolute top-0 left-1/4 w-8 h-full bg-[#e10600]/10 skew-x-[-12deg] transform translate-x-20"></div>
+                <div
+                    className="absolute top-0 left-1/4 w-32 h-full bg-white/5 skew-x-[-12deg] transform -translate-x-1/2"></div>
+                <div
+                    className="absolute top-0 left-1/4 w-8 h-full bg-[#e10600]/10 skew-x-[-12deg] transform translate-x-20"></div>
             </div>
 
             <div className="max-w-md w-full relative z-10">
@@ -64,19 +74,23 @@ export default function Register() {
                     <h1 className="text-4xl font-black text-white italic uppercase tracking-tighter mb-2">
                         Start Your <span className="text-[#e10600]">Engine</span>
                     </h1>
-                    <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Join the Racing Line Paddock</p>
+                    <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Join the Racing Line
+                        Paddock</p>
                 </div>
 
                 <div className="bg-white p-8 shadow-2xl relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#e10600] to-[#15151e]"></div>
+                    <div
+                        className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#e10600] to-[#15151e]"></div>
 
                     <form className="space-y-5" action={formAction}>
 
                         {/* Username */}
                         <div className="group">
-                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Username</label>
+                            <label
+                                className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Username</label>
                             <div className="relative">
-                                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                <User size={16}
+                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
                                 <input
                                     type="text"
                                     {...register('username')}
@@ -87,9 +101,12 @@ export default function Register() {
                         </div>
 
                         <div className="group">
-                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Email Address</label>
+                            <label
+                                className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Email
+                                Address</label>
                             <div className="relative">
-                                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                <Mail size={16}
+                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
                                 <input
                                     type="email"
                                     {...register('email')}
@@ -101,7 +118,8 @@ export default function Register() {
 
                         <div className="group">
                             <div className="flex justify-between items-center mb-2">
-                                <label className="block text-[10px] font-bold uppercase text-gray-400 tracking-wider group-focus-within:text-[#e10600] transition-colors">Avatar</label>
+                                <label
+                                    className="block text-[10px] font-bold uppercase text-gray-400 tracking-wider group-focus-within:text-[#e10600] transition-colors">Avatar</label>
 
                                 <div className="flex bg-gray-100 p-0.5 rounded-sm">
                                     <button
@@ -109,25 +127,26 @@ export default function Register() {
                                         onClick={() => setInputMethod('url')}
                                         className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'url' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
-                                        <LinkIcon size={10} /> URL
+                                        <LinkIcon size={10}/> URL
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setInputMethod('file')}
                                         className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'file' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
-                                        <Upload size={10} /> Upload
+                                        <Upload size={10}/> Upload
                                     </button>
                                 </div>
                             </div>
 
                             <div className="flex gap-4 items-start">
-                                <div className="w-12 h-12 rounded-full bg-gray-100 flex-shrink-0 overflow-hidden border-2 border-gray-100 shadow-sm relative">
+                                <div
+                                    className="w-12 h-12 rounded-full bg-gray-100 flex-shrink-0 overflow-hidden border-2 border-gray-100 shadow-sm relative">
                                     {imagePreview ? (
-                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover"/>
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                            <ImageIcon size={20} />
+                                            <ImageIcon size={20}/>
                                         </div>
                                     )}
                                 </div>
@@ -135,7 +154,8 @@ export default function Register() {
                                 <div className="flex-grow relative">
                                     {inputMethod === 'url' ? (
                                         <div className="relative">
-                                            <ImageIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                            <ImageIcon size={16}
+                                                       className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
                                             <input
                                                 type="text"
                                                 {...register('image')}
@@ -159,7 +179,7 @@ export default function Register() {
                                                 onClick={triggerFileUpload}
                                                 className="w-full py-3 bg-gray-50 border-2 border-dashed border-gray-200 hover:border-[#e10600] hover:bg-[#e10600]/5 text-gray-400 hover:text-[#e10600] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 rounded-sm"
                                             >
-                                                <Upload size={14} /> Choose Image
+                                                <Upload size={14}/> Choose Image
                                             </button>
                                         </>
                                     )}
@@ -168,9 +188,11 @@ export default function Register() {
                         </div>
 
                         <div className="group">
-                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Password</label>
+                            <label
+                                className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Password</label>
                             <div className="relative">
-                                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                <Lock size={16}
+                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
                                 <input
                                     type="password"
                                     {...register('password')}
@@ -181,9 +203,12 @@ export default function Register() {
                         </div>
 
                         <div className="group">
-                            <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Confirm Password</label>
+                            <label
+                                className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Confirm
+                                Password</label>
                             <div className="relative">
-                                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
+                                <Lock size={16}
+                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
                                 <input
                                     type="password"
                                     {...register('confirmPassword')}
@@ -197,7 +222,8 @@ export default function Register() {
                             type="submit"
                             className="w-full bg-[#15151e] text-white py-4 mt-4 font-black uppercase italic tracking-wider hover:bg-[#e10600] transition-all duration-300 group flex items-center justify-center gap-2 shadow-lg shadow-red-500/20"
                         >
-                            Create Account <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                            Create Account <ArrowRight size={18}
+                                                       className="group-hover:translate-x-1 transition-transform"/>
                         </button>
                     </form>
 

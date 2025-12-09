@@ -3,18 +3,25 @@ import { Link, useNavigate } from 'react-router';
 import UserContext from '../../contexts/userContext.jsx';
 import useForm from '../../hooks/useForm.js';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
+import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
 
 export default function Login() {
     const navigate = useNavigate();
     const { loginHandler } = useContext(UserContext);
+    const {showNotification} = useNotificationsContext();
 
     const submitHandler = async (values) => {
         const { email, password } = values;
+
+        if (!email || !password) {
+            showNotification('Email and Password are required', 'error');
+        }
+
         try {
             await loginHandler({ email, password });
             navigate('/');
         } catch (error) {
-            alert(error.message)
+            showNotification(error.message, 'error');
         }
     }
 
