@@ -107,7 +107,7 @@ export default function ArticleDetails() {
                         {user?._id === article._ownerId
                             ? (
                                 <div className="flex gap-2 mb-6">
-                                    <Link to={`/articles/edit/${articleId}`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                    <Link to={`/articles/${articleId}/edit`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
                                         <Edit3 size={14} /> Edit
                                     </Link>
                                     <button onClick={deleteHandler} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
