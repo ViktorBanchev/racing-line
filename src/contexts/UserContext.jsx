@@ -37,12 +37,17 @@ export function UserProvider(props) {
             .finally(() => setUser(null))
     }
 
+    const invalidateTokenHandler = async () => {
+        setUser(null);
+    }
+
     const userContextValues = {
         user,
         isAuthenticated: !!user?.accessToken,
         registerHandler,
         loginHandler,
-        logoutHandler
+        logoutHandler,
+        invalidateTokenHandler,
     }
 
     return (

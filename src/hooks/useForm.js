@@ -81,6 +81,7 @@ export default function useForm(callback, initialValues) {
         imageUploadRegister,
         changeHandler,
         resetForm,
+        setValues,
         register,
         formAction,
         imagePreview,
