@@ -1,11 +1,11 @@
-import {useCallback, useContext, useEffect, useState} from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import UserContext from "../contexts/userContext.jsx"
 import { toast } from "react-toastify";
 
 const baseUrl = import.meta.env.VITE_APP_SERVER_URL;
 
-export default function useRequest(url, initialState) {
-    const {isAuthenticated, user, invalidateTokenHandler} = useContext(UserContext);
+export default function useRequest(url, initialState, config = {}) {
+    const { isAuthenticated, user, invalidateTokenHandler } = useContext(UserContext);
     const [data, setData] = useState(initialState);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -23,8 +23,10 @@ export default function useRequest(url, initialState) {
 
             options.body = JSON.stringify(data);
         }
-
-        if (config?.accessToken || isAuthenticated) {
+        if (config?.noAuth === true) {
+            // Do nothing
+        }
+        else if (config?.accessToken || isAuthenticated) {
             options.headers = {
                 ...options.headers,
                 'X-Authorization': config.accessToken || user.accessToken,
@@ -55,7 +57,7 @@ export default function useRequest(url, initialState) {
 
     useEffect(() => {
         if (!url) return;
-        request(url)
+        request(url, 'GET', null, config)
             .then(result => {
                 setData(result);
                 setIsLoading(false);
@@ -70,7 +72,7 @@ export default function useRequest(url, initialState) {
         request,
         data,
         setData,
-        isLoading
+        isLoading,
     }
 }
 
