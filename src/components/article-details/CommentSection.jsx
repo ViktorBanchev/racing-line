@@ -47,7 +47,7 @@ export default function CommentSection({ articleId }) {
     return (
         <div className="mt-16">
             <h3 className="text-xl font-black uppercase italic tracking-tight mb-6 flex items-center gap-2">
-                Discussion <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full not-italic font-bold">12</span>
+                Discussion <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full not-italic font-bold">{comments.length}</span>
             </h3>
 
             {/* Input */}
