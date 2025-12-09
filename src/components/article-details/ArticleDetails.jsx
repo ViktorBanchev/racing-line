@@ -1,29 +1,64 @@
-
-import { Link, useNavigate, useParams } from 'react-router';
+import {Link, useNavigate, useParams} from 'react-router';
 import ArticleCard from '../article/ArticleCard.jsx';
 import useRequest from '../../hooks/useRequest.js';
-import { Calendar, Clock, User, MessageCircle, Share2, Bookmark, Heart, ChevronRight, Edit3, Trash2, Flag, BarChart2, TrendingUp } from 'lucide-react';
-import { useContext } from 'react';
+import {
+    Calendar,
+    Clock,
+    User,
+    MessageCircle,
+    Share2,
+    Bookmark,
+    Heart,
+    ChevronRight,
+    Edit3,
+    Trash2,
+    Flag,
+    BarChart2,
+    TrendingUp, HeartIcon
+} from 'lucide-react';
+import {useContext, useState} from 'react';
 import UserContext from '../../contexts/userContext.jsx';
 import CommentSection from './CommentSection.jsx';
 
 import DOMPurify from 'dompurify';
 
 export default function ArticleDetails() {
-    const { articleId } = useParams();
+    const {articleId} = useParams();
     const navigate = useNavigate();
-    const { user } = useContext(UserContext);
+    const {user} = useContext(UserContext);
+
+
+
     const urlParams = new URLSearchParams({
         load: `author=_ownerId:users`
     })
 
-    const { data: article, request } = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
+    const {data: article, request, setData: setArticle} = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
 
-    if (!article || !article.title) return <div className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading Paddock Data...</div>;
+    const isLiked = article.likedBy?.includes(user?._id);
+    console.log(isLiked)
+
+    if (!article || !article.title) return <div
+        className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading
+        Paddock Data...</div>;
 
     const deleteHandler = async () => {
         await request(`/data/articles/${articleId}`, 'DELETE', null);
         navigate('/')
+    }
+
+    const likeHandler = async () => {
+        const newLikedBy = isLiked
+            ? article.likedBy.filter(id => id !== user._id)
+            : [...article.likedBy, user._id]
+
+        const body = {likedBy: newLikedBy}
+
+        const result = await request(`/data/articles/${articleId}`, 'PATCH', body);
+
+        const updatedArticle = {...article, ...result}
+
+        setArticle(updatedArticle);
     }
 
     return (
@@ -31,13 +66,14 @@ export default function ArticleDetails() {
 
             {/* Main Content Wrapper */}
             <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
-
+                <Heart/>
                 {/* --- HEADER SECTION (News Style) --- */}
                 <header className="max-w-4xl mx-auto mb-10">
 
                     {/* Category & Breadcrumb */}
                     <div className="flex items-center gap-2 mb-4">
-                        <span className="bg-[#e10600] text-white text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider rounded-sm">
+                        <span
+                            className="bg-[#e10600] text-white text-[10px] font-bold uppercase px-2 py-0.5 tracking-wider rounded-sm">
                             {article.category}
                         </span>
                     </div>
@@ -53,7 +89,8 @@ export default function ArticleDetails() {
                     </p>
 
                     {/* Subtle Author & Meta Row */}
-                    <div className="flex flex-wrap items-center justify-between border-t border-b border-gray-100 py-4 gap-4">
+                    <div
+                        className="flex flex-wrap items-center justify-between border-t border-b border-gray-100 py-4 gap-4">
 
                         {/* Author Info (Subtle) */}
                         <div className="flex items-center gap-3">
@@ -63,7 +100,8 @@ export default function ArticleDetails() {
                                 className="w-10 h-10 rounded-full bg-gray-100 object-cover"
                             />
                             <div className="flex flex-col justify-center">
-                                <span className="text-sm font-bold text-[#15151e] leading-none mb-1 hover:text-[#e10600] cursor-pointer">
+                                <span
+                                    className="text-sm font-bold text-[#15151e] leading-none mb-1 hover:text-[#e10600] cursor-pointer">
                                     {article.author.username}
                                 </span>
                                 <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
@@ -74,25 +112,41 @@ export default function ArticleDetails() {
 
                         {/* Social / Actions */}
                         <div className="flex items-center gap-4 text-gray-400">
-                            <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider mr-2 hidden sm:flex">
-                                <MessageCircle size={16} /> <span>12 Comments</span>
+                            <div
+                                className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider mr-2 hidden sm:flex">
+                                <MessageCircle size={16}/> <span>12 Comments</span>
                             </div>
-                            <button className="hover:text-[#e10600] transition-colors"><Share2 size={20} /></button>
-                            <button className="hover:text-[#e10600] transition-colors"><Bookmark size={20} /></button>
+                            <button className="hover:text-[#e10600] transition-colors"><Share2 size={20}/></button>
+                            <button
+                                onClick={likeHandler}
+                                className={`
+                                    flex items-center gap-1.5 font-bold transition-all 
+                                    ${isLiked
+                                    ? 'text-[#e10600] transform scale-110' // Active/Liked state classes
+                                    : 'text-gray-400 hover:text-[#e10600]'}`}>
+                                <Heart
+                                    size={20}
+                                    // Fill the heart icon solid red when isLiked
+                                    fill={isLiked ? '#e10600' : 'none'}
+                                />
+                                {article.likedBy.length}
+                            </button>
                         </div>
                     </div>
                 </header>
 
                 {/* --- MAIN IMAGE SECTION (Restricted Width) --- */}
                 <div className="max-w-5xl mx-auto mb-12">
-                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm shadow-sm bg-gray-100 group">
+                    <div
+                        className="relative aspect-[16/9] w-full overflow-hidden rounded-sm shadow-sm bg-gray-100 group">
                         <img
                             src={article.image}
                             alt={article.title}
                             className="w-full h-full object-cover"
                         />
                         {/* Photo Credit */}
-                        <div className="absolute bottom-0 right-0 bg-black/50 text-white text-[10px] px-2 py-1 uppercase tracking-wider backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div
+                            className="absolute bottom-0 right-0 bg-black/50 text-white text-[10px] px-2 py-1 uppercase tracking-wider backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
                             Photo by: Getty Images / Red Bull Content Pool
                         </div>
                     </div>
@@ -107,11 +161,13 @@ export default function ArticleDetails() {
                         {user?._id === article._ownerId
                             ? (
                                 <div className="flex gap-2 mb-6">
-                                    <Link to={`/articles/${articleId}/edit`} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
-                                        <Edit3 size={14} /> Edit
+                                    <Link to={`/articles/${articleId}/edit`}
+                                          className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                        <Edit3 size={14}/> Edit
                                     </Link>
-                                    <button onClick={deleteHandler} className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
-                                        <Trash2 size={14} /> Delete
+                                    <button onClick={deleteHandler}
+                                            className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-xs font-bold uppercase text-gray-600 rounded-sm transition-colors">
+                                        <Trash2 size={14}/> Delete
                                     </button>
                                 </div>
                             ) : ''
@@ -123,15 +179,17 @@ export default function ArticleDetails() {
                             prose-a:text-[#e10600] prose-a:font-bold prose-a:no-underline hover:prose-a:underline 
                             prose-img:rounded-sm prose-blockquote:border-l-[#e10600] prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4">
 
-                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
+                            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(article.content)}}/>
                         </article>
 
                         {/* Article Footer / Tags */}
                         <div className="mt-12 pt-8 border-t border-gray-200">
-                            <h4 className="text-xs font-bold uppercase text-gray-400 mb-4 tracking-wider">Related Topics</h4>
+                            <h4 className="text-xs font-bold uppercase text-gray-400 mb-4 tracking-wider">Related
+                                Topics</h4>
                             <div className="flex flex-wrap gap-2">
                                 {['Red Bull Racing', 'Max Verstappen', 'Qualifying', 'Monza'].map(tag => (
-                                    <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-[#15151e] hover:text-white transition-colors cursor-pointer rounded-sm">
+                                    <span key={tag}
+                                          className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase hover:bg-[#15151e] hover:text-white transition-colors cursor-pointer rounded-sm">
                                         {tag}
                                     </span>
                                 ))}
@@ -139,7 +197,7 @@ export default function ArticleDetails() {
                         </div>
 
                         {/* Comments Section (Simplified) */}
-                        <CommentSection articleId={articleId} />
+                        <CommentSection articleId={articleId}/>
                     </div>
 
                     {/* Right Column: Sidebar (Standard) */}
@@ -149,7 +207,7 @@ export default function ArticleDetails() {
                         <div className="bg-white border border-gray-200 p-0 rounded-sm">
                             <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
                                 <h4 className="text-sm font-black uppercase italic tracking-tighter text-[#15151e] flex items-center gap-2">
-                                    <TrendingUp size={16} className="text-[#e10600]" /> Most Read
+                                    <TrendingUp size={16} className="text-[#e10600]"/> Most Read
                                 </h4>
                             </div>
                             <div className="divide-y divide-gray-100">
@@ -161,7 +219,8 @@ export default function ArticleDetails() {
                                 ].map((title, i) => (
                                     <Link key={i} to="#" className="block p-4 hover:bg-gray-50 group transition-colors">
                                         <div className="flex gap-3">
-                                            <span className="text-xl font-black text-gray-200 group-hover:text-[#e10600] italic leading-none">{i + 1}</span>
+                                            <span
+                                                className="text-xl font-black text-gray-200 group-hover:text-[#e10600] italic leading-none">{i + 1}</span>
                                             <h5 className="text-sm font-bold text-gray-700 group-hover:text-[#15151e] leading-tight">{title}</h5>
                                         </div>
                                     </Link>
@@ -170,7 +229,8 @@ export default function ArticleDetails() {
                         </div>
 
                         {/* Simple Ad Placeholder (Simulating standard layout) */}
-                        <div className="bg-gray-100 h-64 flex items-center justify-center text-gray-400 text-xs font-mono uppercase tracking-widest border border-dashed border-gray-300">
+                        <div
+                            className="bg-gray-100 h-64 flex items-center justify-center text-gray-400 text-xs font-mono uppercase tracking-widest border border-dashed border-gray-300">
                             Advertisement Space
                         </div>
 
