@@ -1,6 +1,6 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
-import { storage } from "../../firebase.js";
+import { storage } from "../../firebase-setup.js";
 import { v4 as uuid } from "uuid";
 
 export default function useForm(callback, initialValues) {

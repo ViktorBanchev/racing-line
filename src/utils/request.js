@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3030/data'
+const baseUrl = 'http://127.0.0.1:5001/racing-line-project/us-central1/server'
 
 export default async function request(url, method, data) {
     let options = {}

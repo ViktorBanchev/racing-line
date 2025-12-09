@@ -1,12 +1,11 @@
 import {useCallback, useContext, useEffect, useState} from "react"
 import UserContext from "../contexts/userContext.jsx"
-import {useNotificationsContext} from "../contexts/NotificationsContext.jsx";
+import { toast } from "react-toastify";
 
-const baseUrl = 'http://localhost:3030'
+const baseUrl = import.meta.env.VITE_APP_SERVER_URL;
 
 export default function useRequest(url, initialState) {
     const {isAuthenticated, user, invalidateTokenHandler} = useContext(UserContext);
-    const {showNotification} = useNotificationsContext()
     const [data, setData] = useState(initialState);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -52,7 +51,7 @@ export default function useRequest(url, initialState) {
         return result;
 
 
-    }, [isAuthenticated, user]);
+    }, [invalidateTokenHandler, isAuthenticated, user]);
 
     useEffect(() => {
         if (!url) return;
@@ -63,7 +62,7 @@ export default function useRequest(url, initialState) {
             })
             .catch(err => {
                 setIsLoading(false);
-                showNotification(err.message, 'error');
+                toast.error(err.message);
             })
     }, [request, url])
 
