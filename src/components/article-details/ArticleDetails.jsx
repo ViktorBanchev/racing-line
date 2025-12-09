@@ -28,12 +28,15 @@ export default function ArticleDetails() {
     const {user} = useContext(UserContext);
 
 
-
     const urlParams = new URLSearchParams({
         load: `author=_ownerId:users`
     })
 
-    const {data: article, request, setData: setArticle} = useRequest(`/data/articles/${articleId}?${urlParams}`, [])
+    const {
+        data: article,
+        request,
+        setData: setArticle
+    } = useRequest(`/data/articles/${articleId}?${urlParams}`, {likedBy: [], author: {}})
 
     const isLiked = article.likedBy?.includes(user?._id);
     console.log(isLiked)
