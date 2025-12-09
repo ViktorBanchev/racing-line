@@ -1,14 +1,16 @@
-import { useContext, useEffect, useState } from "react"
+import {useCallback, useContext, useEffect, useState} from "react"
 import UserContext from "../contexts/userContext.jsx"
+import {useNotificationsContext} from "../contexts/NotificationsContext.jsx";
 
 const baseUrl = 'http://localhost:3030'
 
 export default function useRequest(url, initialState) {
-    const {isAuthenticated, user} = useContext(UserContext);
+    const {isAuthenticated, user, invalidateTokenHandler} = useContext(UserContext);
+    const {showNotification} = useNotificationsContext()
     const [data, setData] = useState(initialState);
     const [isLoading, setIsLoading] = useState(true);
 
-    async function request(url, method, data, config = {}) {
+    const request = useCallback(async (url, method, data, config = {}) => {
         let options = {}
 
         if (method) {
@@ -32,28 +34,39 @@ export default function useRequest(url, initialState) {
 
         const response = await fetch(`${baseUrl}${url}`, options);
 
+        setIsLoading(false);
+
+        const result = await response.json();
+
         if (!response.ok) {
-            throw response.statusText;
+            if (response.status === 403 && isAuthenticated) {
+                invalidateTokenHandler();
+            }
+            throw new Error(result.message);
         }
-        
+
         if (response.status === 204) {
             return {};
         }
 
-        const result = await response.json();
-        setIsLoading(false);
+
         return result;
-    }
+
+
+    }, [isAuthenticated, user]);
 
     useEffect(() => {
-        if(!url) return;
+        if (!url) return;
         request(url)
             .then(result => {
                 setData(result);
                 setIsLoading(false);
             })
-            .catch(err => alert(err.message))
-    }, [url])
+            .catch(err => {
+                setIsLoading(false);
+                showNotification(err.message, 'error');
+            })
+    }, [request, url])
 
     return {
         request,
