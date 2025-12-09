@@ -1,4 +1,4 @@
-import { createContext } from "react"
+import { createContext, useContext } from "react"
 import useRequest from "../hooks/useRequest.js";
 import useLocalStorage from "../hooks/useLocalStorage.js";
 
@@ -41,6 +41,7 @@ export function UserProvider(props) {
         setUser(null);
     }
 
+
     const userContextValues = {
         user,
         isAuthenticated: !!user?.accessToken,
@@ -55,6 +56,10 @@ export function UserProvider(props) {
             {props.children}
         </UserContext.Provider>
     )
+}
+
+export const useUserContext = () => {
+    return useContext(UserContext);
 }
 
 export default UserContext;
