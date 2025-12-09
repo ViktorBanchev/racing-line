@@ -11,6 +11,8 @@ import MyArticles from "./components/my-articles/MyArticles.jsx"
 import ArticleForm from "./components/article-create/ArticleForm.jsx"
 import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteGuard.jsx"
 import { useLayoutEffect } from "react"
+import About from "./components/about/About.jsx";
+import NotFound from "./components/not-found/NotFound.jsx";
 
 const Wrapper = ({ children }) => {
     const { pathname } = useLocation();
@@ -42,6 +44,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                 </Route>
+                <Route path="/about" element={<About />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
 
             <Footer />
