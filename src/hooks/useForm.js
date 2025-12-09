@@ -10,7 +10,6 @@ export default function useForm(callback, initialValues) {
     const changeHandler = async (e) => {
         if (e.target.name === 'image' && e.target.files) {
             const file = e.target.files[0];
-            console.log(file);
 
             if (file) {
                 const objectUrl = URL.createObjectURL(file);

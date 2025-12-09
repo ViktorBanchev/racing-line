@@ -104,15 +104,6 @@ export default function Home() {
             <div className="sticky top-[72px] z-40 bg-white/80 backdrop-blur-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-hide">
-                        {/* <button className="flex-shrink-0 bg-[#15151e] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg shadow-gray-200">
-                            All News
-                        </button> */}
-
-                        {/* className="flex-shrink-0 bg-[#15151e] text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide shadow-lg shadow-gray-200"
-                        className="flex-shrink-0 px-6 py-2 rounded-full\ text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-[#e10600] text-sm font-bold uppercase tracking-wide transition-all whitespace-nowrap" */}
-
-                        `
-
                         {['All News', 'Race Reports', 'Technical', 'Driver News', 'Team News', 'Interviews'].map((cat) => (
                             <button key={cat} onClick={() => setFilter(transformFilter(cat))} className={`flex-shrink-0 px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide ${filter === transformFilter(cat)
                                 ? 'bg-[#15151e] text-white shadow-gray-200'
@@ -125,7 +116,6 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* Main Content Grid */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="flex items-end justify-between mb-10">
                     <h2 className="text-3xl font-black text-[#15151e] uppercase tracking-tighter italic">
@@ -152,7 +142,6 @@ export default function Home() {
                     )
                 }
 
-                {/* Pagination */}
                 <div className="mt-20 flex justify-center">
                     <div className="inline-flex items-center bg-white rounded-full shadow-lg p-1.5 border border-gray-100">
                         <button className="w-10 h-10 flex items-center justify-center rounded-full text-gray-400 hover:text-[#15151e] hover:bg-gray-100 transition-colors disabled:opacity-50">
