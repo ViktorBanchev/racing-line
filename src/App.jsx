@@ -13,6 +13,7 @@ import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteG
 import { useLayoutEffect } from "react"
 import About from "./components/about/About.jsx";
 import NotFound from "./components/not-found/NotFound.jsx";
+import { ToastContainer } from "react-toastify"
 
 const Wrapper = ({ children }) => {
     const { pathname } = useLocation();
@@ -28,6 +29,8 @@ function App() {
     return (
         <Wrapper>
             <Header />
+            
+            <ToastContainer />
 
             <Routes>
                 <Route path="/" element={<Home />} />
