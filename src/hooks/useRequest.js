@@ -36,6 +36,10 @@ export default function useRequest(url, initialState) {
 
         setIsLoading(false);
 
+        if (response.status === 204) {
+            return {};
+        }
+
         const result = await response.json();
 
         if (!response.ok) {
@@ -44,11 +48,6 @@ export default function useRequest(url, initialState) {
             }
             throw new Error(result.message);
         }
-
-        if (response.status === 204) {
-            return {};
-        }
-
 
         return result;
 
