@@ -1,24 +1,76 @@
-import { Link, useNavigate } from 'react-router';
-import { FileText } from 'lucide-react';
+import {createBrowserRouter, Link, useNavigate, useParams} from 'react-router';
+import {FileText} from 'lucide-react';
 import useForm from '../../hooks/useForm.js';
 import useRequest from '../../hooks/useRequest.js';
 
 // Tiptap Imports
-import { useEditor, EditorContent } from '@tiptap/react';
+import {useEditor, EditorContent} from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
 import LinkExtension from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import MenuBar from './tiptap/MenuBar.jsx';
 import RightSidebar from './right-sidebar/RightSidebar.jsx';
+import {useEffect, useState} from "react";
+import {useNotificationsContext} from "../../contexts/NotificationsContext.jsx";
 
-export default function CreateArticle() {
+export default function ArticleForm({
+                                        mode
+                                    }) {
     const navigate = useNavigate();
-    const { request } = useRequest();
+    const {showNotification} = useNotificationsContext()
+    const {articleId} = useParams();
+    const {request} = useRequest();
+
+    const submitAction = async (values) => {
+        if (!editor) return;
+
+        const articleData = {
+            ...values,
+            content: editor.getHTML(), // Get the HTML content from Tiptap
+            plainText: editor.getText(), // Optional: for search indexing or snippets
+        };
+
+        if (!articleData.title) {
+            return showNotification('Title is required', 'error');
+        }
+
+        if (!articleData.category) {
+            return showNotification('Category is required', 'error');
+        }
+
+        if (!articleData.image) {
+            return showNotification('Image is required', 'error');
+        }
+
+        if (editor.isEmpty) {
+            return showNotification('Article content can not be empty', 'error');
+        }
+
+        try {
+            switch (mode) {
+                case 'edit':
+                    await request(`/data/articles/${articleId}`, 'PUT', articleData);
+                    break;
+                case 'create':
+                    await request('/data/articles', 'POST', articleData);
+                    break;
+            }
+            navigate("/");
+        } catch (error) {
+            showNotification("Failed to publish article: " + error.message, "error");
+        }
+    }
+
+    const {register, formAction, imagePreview, setValues} = useForm(submitAction, {
+        title: '', category: '', image: '',
+    });
 
     const editor = useEditor({
         extensions: [
-            StarterKit,
+            StarterKit.configure({
+                link: false
+            }),
             ImageExtension,
             LinkExtension.configure({
                 openOnClick: false,
@@ -38,34 +90,15 @@ export default function CreateArticle() {
         },
     });
 
-    const submitAction = async (values) => {
-        if (!editor) return;
-
-        // Merge form values with editor content
-        const articleData = {
-            ...values,
-            content: editor.getHTML(), // Get the HTML content from Tiptap
-            plainText: editor.getText(), // Optional: for search indexing or snippets
-        };
-
-        if (editor.isEmpty) {
-            alert("Telemetry Error: Article content cannot be empty.");
-            return;
+    useEffect(() => {
+        if (mode === 'edit') {
+            request(`/data/articles/${articleId}`, null, null)
+                .then(result => {
+                    setValues(result);
+                    editor.commands.setContent(result.content);
+                })
         }
-
-        try {
-            console.log("Transmitting to Pit Wall...", articleData);
-            await request('/data/articles', 'POST', articleData);
-            navigate("/");
-        } catch (error) {
-            console.error("Transmission failed:", error);
-            alert("Failed to publish article.");
-        }
-    }
-
-    const { register, formAction, imagePreview } = useForm(submitAction, {
-        title: '', category: '', image: '',
-    });
+    }, [editor, mode, articleId, request, setValues]);
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] pb-20">
@@ -89,7 +122,7 @@ export default function CreateArticle() {
                         {/* 1. Meta Data Card */}
                         <div className="bg-white p-6 shadow-md rounded-sm border-l-4 border-[#15151e]">
                             <h3 className="text-xs font-black uppercase text-gray-400 mb-4 tracking-widest flex items-center gap-2">
-                                <FileText size={14} /> Basic Telemetry
+                                <FileText size={14}/> Basic Telemetry
                             </h3>
 
                             <div className="space-y-6">
@@ -123,13 +156,14 @@ export default function CreateArticle() {
 
                                     {/* Image URL */}
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold uppercase text-gray-500">Cover Visual</label>
+                                        <label className="text-[10px] font-bold uppercase text-gray-500">Cover
+                                            Visual</label>
                                         <input
                                             type="text"
                                             className="w-full bg-gray-50 font-medium text-sm text-gray-700 border border-gray-200 rounded-sm px-3 py-2 focus:border-[#e10600] focus:ring-0"
                                             placeholder="https://..."
                                             {...register('image')}
-                                        // onChange={(e) => setImagePreview(e.target.value)}
+                                            // onChange={(e) => setImagePreview(e.target.value)}
                                         />
                                     </div>
                                 </div>
@@ -137,18 +171,20 @@ export default function CreateArticle() {
                         </div>
 
                         {/* 2. TIPTAP EDITOR CARD */}
-                        <div className="bg-white shadow-xl rounded-sm flex flex-col min-h-[600px] border border-gray-200">
+                        <div
+                            className="bg-white shadow-xl rounded-sm flex flex-col min-h-[600px] border border-gray-200">
 
                             {/* Toolbar Component */}
-                            <MenuBar editor={editor} />
+                            <MenuBar editor={editor}/>
 
                             {/* Editor Content Area */}
                             <div className="flex-grow bg-white cursor-text">
-                                <EditorContent editor={editor} />
+                                <EditorContent editor={editor}/>
                             </div>
 
                             {/* Footer Status */}
-                            <div className="bg-gray-50 border-t border-gray-100 px-4 py-2 flex justify-between items-center text-[10px] font-bold uppercase text-gray-400 shrink-0">
+                            <div
+                                className="bg-gray-50 border-t border-gray-100 px-4 py-2 flex justify-between items-center text-[10px] font-bold uppercase text-gray-400 shrink-0">
                                 <span>WYSIWYG Mode Active</span>
                                 <span>
                                     {editor ? editor.storage.characterCount?.characters() || editor.getText().length : 0} Chars
@@ -158,7 +194,8 @@ export default function CreateArticle() {
 
                         {/* Action Buttons */}
                         <div className="flex justify-end gap-4 pt-4">
-                            <Link to="/" className="px-6 py-3 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-xs tracking-wider rounded-sm hover:bg-gray-50 transition-colors">
+                            <Link to="/"
+                                  className="px-6 py-3 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-xs tracking-wider rounded-sm hover:bg-gray-50 transition-colors">
                                 Abort
                             </Link>
                             <button
@@ -170,7 +207,7 @@ export default function CreateArticle() {
                         </div>
                     </div>
 
-                    <RightSidebar imagePreview={imagePreview} />
+                    <RightSidebar imagePreview={imagePreview}/>
                 </form>
             </main>
         </div>
