@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router";
 import useRequest from "../../hooks/useRequest.js";
-import { ChevronLeft, ChevronRight, FileText, Filter, Loader2 } from "lucide-react";
+import { FileText, Filter, Loader2 } from "lucide-react";
 import ArticleListItem from "./ArticleListItem.jsx";
 
 import { useLocation } from "react-router";
-
-const ARTICLE_PER_PAGE = 10;
 
 export default function ArticleCatalog() {
     const navigate = useNavigate();
@@ -16,11 +14,7 @@ export default function ArticleCatalog() {
     };
 
     const queryParams = new URLSearchParams(location.search);
-    const currentPage = parseInt(queryParams.get('page')) || 1;
     const currentCategory = queryParams.get('category') || 'all-news';
-
-
-    const offset = (currentPage - 1) * ARTICLE_PER_PAGE;
 
     let filterQuery = '';
     if (currentCategory && currentCategory !== 'all-news') {
@@ -28,22 +22,10 @@ export default function ArticleCatalog() {
         filterQuery = `&where=${encodedCategory}`;
     }
 
-    const paginationQuery = `offset=${offset}&pageSize=${ARTICLE_PER_PAGE}`;
-
-    const fullQuery =
-        `&${paginationQuery}` +
-        filterQuery;
-    const { data: articles, isLoading } = useRequest(`/data/articles?${fullQuery}`, [], {noAuth: true});
-    const countData = articles.length;
-
-    const totalPages = Math.ceil(countData / ARTICLE_PER_PAGE);
+    const { data: articles, isLoading } = useRequest(`/data/articles?${filterQuery}`, [], {noAuth: true});
 
     const navigateToNewQuery = (key, value) => {
         const newSearchParams = new URLSearchParams(location.search);
-
-        if (key === 'category') {
-            newSearchParams.set('page', '1');
-        }
 
         if (value === 'all-news' || value === 'newest') {
             newSearchParams.delete(key);
@@ -56,7 +38,6 @@ export default function ArticleCatalog() {
     };
 
     const categories = ['All News', 'Race Report', 'Technical', 'Analysis', 'Driver News', 'Opinion'];
-
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] pb-20">
@@ -123,45 +104,6 @@ export default function ArticleCatalog() {
                         ))}
                     </div>
                 )}
-
-                <div className="flex justify-center items-center gap-2 pt-8 mt-12 border-t border-gray-200">
-                    <button
-                        onClick={() => {
-                            navigateToNewQuery('page', currentPage - 1);
-                        }}
-                        disabled={currentPage === 1}
-                        className="p-2 border border-gray-300 rounded-md bg-white text-[#15151e] hover:bg-gray-100 disabled:opacity-50 transition-colors"
-                    >
-                        <ChevronLeft size={18} />
-                    </button>
-
-                    <div className="flex gap-1">
-                        {[...Array(totalPages)].map((_, index) => {
-                            const pageNumber = index + 1;
-
-                            return (
-                                <button
-                                    key={pageNumber}
-                                    onClick={() => navigateToNewQuery('page', pageNumber)}
-                                    className={`px-4 py-2 rounded-md font-bold text-sm transition-colors ${pageNumber === currentPage
-                                        ? 'bg-[#e10600] text-white shadow-md'
-                                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                                        }`}
-                                >
-                                    {pageNumber}
-                                </button>
-                            )
-                        })}
-                    </div>
-
-                    <button
-                        onClick={() => navigateToNewQuery('page', currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="p-2 border border-gray-300 rounded-md bg-white text-[#15151e] hover:bg-gray-100 disabled:opacity-50 transition-colors"
-                    >
-                        <ChevronRight size={18} />
-                    </button>
-                </div>
             </main>
         </div>
     );
