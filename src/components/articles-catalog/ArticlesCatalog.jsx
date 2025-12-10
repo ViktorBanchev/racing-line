@@ -30,15 +30,13 @@ export default function ArticleCatalog() {
 
     const paginationQuery = `offset=${offset}&pageSize=${ARTICLE_PER_PAGE}`;
 
-
-
     const fullQuery =
         `&${paginationQuery}` +
         filterQuery;
 
-    const { data: countData } = useRequest('/data/articles?count=true', 0);
+    const { data: countData } = useRequest(`/data/articles?count=true&${filterQuery}`, 0, {noAuth: true});
     // В реално приложение, URL-ът ще бъде `/data/articles`
-    const { data: articles, isLoading } = useRequest(`/data/articles?${fullQuery}`, []);
+    const { data: articles, isLoading } = useRequest(`/data/articles?${fullQuery}`, [], {noAuth: true});
 
     const totalPages = Math.ceil(countData / ARTICLE_PER_PAGE);
 
