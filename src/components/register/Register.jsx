@@ -1,20 +1,20 @@
-import {Link, useNavigate} from "react-router";
+import { Link, useNavigate } from "react-router";
 import useForm from "../../hooks/useForm.js";
-import {useContext, useRef, useState} from "react";
+import { useContext, useRef, useState } from "react";
 import UserContext from "../../contexts/userContext.jsx";
-import {User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload} from 'lucide-react';
+import { User, Mail, Lock, Image as ImageIcon, ArrowRight, Link as LinkIcon, Upload } from 'lucide-react';
 import { toast } from "react-toastify";
 
 
 export default function Register() {
-    const {registerHandler} = useContext(UserContext)
+    const { registerHandler } = useContext(UserContext)
     const navigate = useNavigate();
 
     const [inputMethod, setInputMethod] = useState('file'); // 'url' | 'file'
     const fileInputRef = useRef(null);
 
     const submitHandler = async (values) => {
-        const {username, email, password, confirmPassword, image} = values;
+        const { username, email, password, confirmPassword, image } = values;
 
         if (!username) {
             return toast.error('Username is required!');
@@ -33,8 +33,8 @@ export default function Register() {
         }
 
         try {
-            await registerHandler({username, email, password, image});
-            toast.success('Registration successful!', {autoClose: 2000});
+            await registerHandler({ username, email, password, image });
+            toast.success('Registration successful!', { autoClose: 2000 });
             navigate('/');
         } catch (error) {
             toast.error(`Error while registering user: ${error.message}`);
@@ -88,7 +88,7 @@ export default function Register() {
                                 className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Username</label>
                             <div className="relative">
                                 <User size={16}
-                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
                                 <input
                                     type="text"
                                     {...register('username')}
@@ -104,7 +104,7 @@ export default function Register() {
                                 Address</label>
                             <div className="relative">
                                 <Mail size={16}
-                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
                                 <input
                                     type="email"
                                     {...register('email')}
@@ -125,14 +125,14 @@ export default function Register() {
                                         onClick={() => setInputMethod('file')}
                                         className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'file' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
-                                        <Upload size={10}/> Upload
+                                        <Upload size={10} /> Upload
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setInputMethod('url')}
                                         className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'url' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
-                                        <LinkIcon size={10}/> URL
+                                        <LinkIcon size={10} /> URL
                                     </button>
                                 </div>
                             </div>
@@ -141,10 +141,10 @@ export default function Register() {
                                 <div
                                     className="w-12 h-12 rounded-full bg-gray-100 flex-shrink-0 overflow-hidden border-2 border-gray-100 shadow-sm relative">
                                     {imagePreview ? (
-                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover"/>
+                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                            <ImageIcon size={20}/>
+                                            <ImageIcon size={20} />
                                         </div>
                                     )}
                                 </div>
@@ -153,7 +153,7 @@ export default function Register() {
                                     {inputMethod === 'url' ? (
                                         <div className="relative">
                                             <ImageIcon size={16}
-                                                       className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
+                                                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
                                             <input
                                                 type="text"
                                                 {...register('image')}
@@ -170,14 +170,13 @@ export default function Register() {
                                                 accept="image/*"
                                                 {...imageUploadRegister('image')}
                                             />
-                                            {/* <input type="text" {...register('image')} /> */}
 
                                             <button
                                                 type="button"
                                                 onClick={triggerFileUpload}
                                                 className="w-full py-3 bg-gray-50 border-2 border-dashed border-gray-200 hover:border-[#e10600] hover:bg-[#e10600]/5 text-gray-400 hover:text-[#e10600] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 rounded-sm"
                                             >
-                                                <Upload size={14}/> Choose Image
+                                                <Upload size={14} /> Choose Image
                                             </button>
                                         </>
                                     )}
@@ -190,7 +189,7 @@ export default function Register() {
                                 className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Password</label>
                             <div className="relative">
                                 <Lock size={16}
-                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
                                 <input
                                     type="password"
                                     {...register('password')}
@@ -206,7 +205,7 @@ export default function Register() {
                                 Password</label>
                             <div className="relative">
                                 <Lock size={16}
-                                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors"/>
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e10600] transition-colors" />
                                 <input
                                     type="password"
                                     {...register('confirmPassword')}
@@ -221,7 +220,7 @@ export default function Register() {
                             className="w-full bg-[#15151e] text-white py-4 mt-4 font-black uppercase italic tracking-wider hover:bg-[#e10600] transition-all duration-300 group flex items-center justify-center gap-2 shadow-lg shadow-red-500/20"
                         >
                             Create Account <ArrowRight size={18}
-                                                       className="group-hover:translate-x-1 transition-transform"/>
+                                className="group-hover:translate-x-1 transition-transform" />
                         </button>
                     </form>
 
