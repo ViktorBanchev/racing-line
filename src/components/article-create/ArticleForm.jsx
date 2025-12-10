@@ -148,11 +148,11 @@ export default function ArticleForm({
                                             {...register('category')}
                                         >
                                             <option value="">Select Category...</option>
-                                            <option value="Race Report">Race Report</option>
-                                            <option value="Technical">Technical</option>
-                                            <option value="Driver News">Driver News</option>
-                                            <option value="Team News">Team News</option>
-                                            <option value="Interviews">Interviews</option>
+                                            <option value="race-report">Race Report</option>
+                                            <option value="technical">Technical</option>
+                                            <option value="driver-news">Driver News</option>
+                                            <option value="team-news">Team News</option>
+                                            <option value="interviews">Interviews</option>
                                         </select>
                                     </div>
 

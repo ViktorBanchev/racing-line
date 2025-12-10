@@ -13,6 +13,11 @@ export default function ArticleCard({
     likes,
     views
 }) {
+    const categoryFormatted = category
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
     return (
         <article className="group relative flex flex-col h-full bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden">
 
@@ -32,7 +37,7 @@ export default function ArticleCard({
                 {/* Category Badge - Clean & Floating */}
                 <div className="absolute top-4 left-4">
                     <span className="bg-[#15151e]/90 backdrop-blur-sm text-white px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md border-l-2 border-[#e10600]">
-                        {category}
+                        {categoryFormatted}
                     </span>
                 </div>
             </div>
