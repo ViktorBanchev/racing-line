@@ -1351,7 +1351,7 @@
             "3987279d-0ad4-4afb-8ca9-5b256ae3b298": {
                 "_id": "3987279d-0ad4-4afb-8ca9-5b256ae3b298",
                 "title": "Verstappen Dominates Abu Dhabi Grand Prix in Spectacular Fashion",
-                "category": "Race Reports",
+                "category": "race-report",
                 "author": "123",
                 // "excerpt": "A detailed analysis of how Ferrari executed the perfect race strategy under the lights of Marina Bay...",
                 // "date": "November 22, 2025",
@@ -1361,12 +1361,13 @@
                 "likedBy": ['60f0cf0b-34b0-4abd-9769-8c42f830dffc', '847ec027-f659-4086-8032-5173e2f9c93a'],
                 "comments": 8,
                 "content": "Red Bull driver Max Verstappen secured another dominant victory at the Abu Dhabi Grand Prix...",
-                "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8"
+                "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+                "_createdOn": 1
             },
             "8f414b4f-ab39-4d36-bedb-2ad69da9c830": {
                 "_id": "8f414b4f-ab39-4d36-bedb-2ad69da9c830",
                 "title": "Leclerc Secures Dramatic Victory in Monaco After Late Safety Car Chaos",
-                "category": "Race Reports",
+                "category": "race-report",
                 "author": "Sarah Johnson",
                 // "excerpt": "Charles Leclerc finally claims victory on home soil after a tense and unpredictable Monaco Grand Prix...",
                 // "date": "May 28, 2025",
@@ -1376,12 +1377,13 @@
                 "likedBy": [],
                 "comments": 12,
                 "content": "In an emotional and long-awaited triumph, Charles Leclerc won the Monaco Grand Prix despite late-race drama...",
-                "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8"
+                "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+                "_createdOn": 2
             },
             "985d9eab-ad2e-4622-a5c8-116261fb1fd2": {
                 "_id": "985d9eab-ad2e-4622-a5c8-116261fb1fd2",
                 "title": "Hamilton Claims Stunning Victory in Wet Silverstone Thriller",
-                "category": "Race Reports",
+                "category": "race-report",
                 "author": "David Clarke",
                 // "excerpt": "Lewis Hamilton delivers a masterclass in changing conditions to win an unforgettable race at Silverstone...",
                 // "date": "July 14, 2025",
@@ -1391,7 +1393,8 @@
                 "likedBy": [],
                 "comments": 17,
                 "content": "Lewis Hamilton showcased his incredible wet-weather skill to take victory in a chaotic and dramatic British Grand Prix...",
-                "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8"
+                "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+                "_createdOn": 3
             }
         },
 
