@@ -15,7 +15,6 @@ import About from "./components/about/About.jsx";
 import NotFound from "./components/not-found/NotFound.jsx";
 import { ToastContainer } from "react-toastify"
 import ArticleCatalog from "./components/articles-catalog/ArticlesCatalog.jsx"
-import Test from "./components/test/Test.jsx"
 
 const Wrapper = ({ children }) => {
     const { pathname } = useLocation();
@@ -36,6 +35,7 @@ function App() {
 
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path='/articles' element={<ArticleCatalog />} />
                 <Route path="/articles/:articleId" element={<ArticleDetails />} />
 
                 <Route element={<AuthRouteGuard />}>
@@ -49,9 +49,9 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                 </Route>
+
                 <Route path="/about" element={<About />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path='/articles' element={<ArticleCatalog />} />
             </Routes>
 
             <Footer />

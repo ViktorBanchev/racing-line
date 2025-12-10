@@ -20,8 +20,7 @@ export default function NotFound() {
                     It might have been moved, deleted, or you might have mistyped the address.
                 </p>
 
-                <Link to="/"
-                      className="px-8 py-3 bg-[#e10600] text-white font-black uppercase italic tracking-wider rounded-sm hover:bg-[#c10500] transition-all transform shadow-lg shadow-red-600/20">
+                <Link to="/" className="px-8 py-3 bg-[#e10600] text-white font-black uppercase italic tracking-wider rounded-sm hover:bg-[#c10500] transition-all transform shadow-lg shadow-red-600/20">
                     Return to the Starting Grid
                 </Link>
             </div>

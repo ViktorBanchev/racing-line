@@ -1,12 +1,8 @@
-import {
-    Image as ImageIcon, AlertCircle, CheckCircle, ChevronRight,
-} from 'lucide-react';
+import { Image as ImageIcon, AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function RightSidebar({ imagePreview }) {
     return (
         <div className="lg:col-span-4 space-y-6">
-
-            {/* 1. Preview Card */}
             <div className="bg-white p-4 shadow-md rounded-sm">
                 <h4 className="text-xs font-bold uppercase text-gray-400 mb-4 tracking-widest border-b border-gray-100 pb-2">
                     Cover Preview
@@ -26,8 +22,7 @@ export default function RightSidebar({ imagePreview }) {
                 </div>
             </div>
 
-            {/* 2. Writing Tips */}
-            {/* <div className="bg-[#15151e] text-white p-6 shadow-md rounded-sm relative overflow-hidden">
+            <div className="bg-[#15151e] text-white p-6 shadow-md rounded-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#e10600] opacity-10 rounded-full blur-xl -mr-10 -mt-10"></div>
 
                 <h4 className="text-sm font-black uppercase italic tracking-tighter mb-4 flex items-center gap-2">
@@ -57,13 +52,7 @@ export default function RightSidebar({ imagePreview }) {
                         </span>
                     </li>
                 </ul>
-
-                <div className="mt-6 pt-4 border-t border-gray-700">
-                    <button type="button" className="w-full flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">
-                        View Guidelines <ChevronRight size={12} />
-                    </button>
-                </div>
-            </div> */}
+            </div>
         </div>
     );
 }

@@ -2,8 +2,6 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { FileText } from 'lucide-react';
 import useForm from '../../hooks/useForm.js';
 import useRequest from '../../hooks/useRequest.js';
-
-// Tiptap Imports
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
@@ -28,8 +26,8 @@ export default function ArticleForm({
             ...values,
             likedBy: [],
             views: 0,
-            content: editor.getHTML(), // Get the HTML content from Tiptap
-            plainText: editor.getText(), // Optional: for search indexing or snippets
+            content: editor.getHTML(),
+            plainText: editor.getText(),
         };
 
         if (!articleData.title) {
@@ -111,7 +109,7 @@ export default function ArticleForm({
                             Paddock <span className="text-[#e10600]">Editor</span>
                         </h1>
                         <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
-                            New Session &bull; Tiptap Engine V2.0
+                            Tiptap Engine V2.0
                         </p>
                     </div>
                 </div>
@@ -120,15 +118,12 @@ export default function ArticleForm({
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
                 <form action={formAction} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div className="lg:col-span-8 space-y-6">
-
-                        {/* 1. Meta Data Card */}
                         <div className="bg-white p-6 shadow-md rounded-sm border-l-4 border-[#15151e]">
                             <h3 className="text-xs font-black uppercase text-gray-400 mb-4 tracking-widest flex items-center gap-2">
                                 <FileText size={14} /> Basic Telemetry
                             </h3>
 
                             <div className="space-y-6">
-                                {/* Headline */}
                                 <div className="space-y-1">
                                     <label className="text-[10px] font-bold uppercase text-gray-500">Headline</label>
                                     <input
@@ -140,7 +135,6 @@ export default function ArticleForm({
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Category */}
                                     <div className="space-y-1">
                                         <label className="text-[10px] font-bold uppercase text-gray-500">Sector</label>
                                         <select
@@ -156,7 +150,6 @@ export default function ArticleForm({
                                         </select>
                                     </div>
 
-                                    {/* Image URL */}
                                     <div className="space-y-1">
                                         <label className="text-[10px] font-bold uppercase text-gray-500">Cover
                                             Visual</label>
@@ -165,36 +158,20 @@ export default function ArticleForm({
                                             className="w-full bg-gray-50 font-medium text-sm text-gray-700 border border-gray-200 rounded-sm px-3 py-2 focus:border-[#e10600] focus:ring-0"
                                             placeholder="https://..."
                                             {...register('image')}
-                                        // onChange={(e) => setImagePreview(e.target.value)}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 2. TIPTAP EDITOR CARD */}
-                        <div
-                            className="bg-white shadow-xl rounded-sm flex flex-col min-h-[600px] border border-gray-200">
-
-                            {/* Toolbar Component */}
+                        <div className="bg-white shadow-xl rounded-sm flex flex-col min-h-[600px] border border-gray-200">
                             <MenuBar editor={editor} />
 
-                            {/* Editor Content Area */}
                             <div className="flex-grow bg-white cursor-text">
                                 <EditorContent editor={editor} />
                             </div>
-
-                            {/* Footer Status */}
-                            <div
-                                className="bg-gray-50 border-t border-gray-100 px-4 py-2 flex justify-between items-center text-[10px] font-bold uppercase text-gray-400 shrink-0">
-                                <span>WYSIWYG Mode Active</span>
-                                <span>
-                                    {editor ? editor.storage.characterCount?.characters() || editor.getText().length : 0} Chars
-                                </span>
-                            </div>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="flex justify-end gap-4 pt-4">
                             <Link to="/"
                                 className="px-6 py-3 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-xs tracking-wider rounded-sm hover:bg-gray-50 transition-colors">

@@ -1,4 +1,4 @@
-import { ArrowUpRight, Eye, Heart } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router";
 
 

@@ -10,8 +10,6 @@ export default function Header() {
         <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#15151e]/95 backdrop-blur-md shadow-xl py-3' : 'bg-[#15151e] py-5'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
-
-                    {/* Logo - Renamed to Racing Line */}
                     <Link to="/" className="flex items-center group">
                         <div className="relative flex items-baseline gap-1">
                             <h1 className="text-3xl font-black text-white tracking-tighter italic transform -skew-x-6">
@@ -58,7 +56,6 @@ export default function Header() {
 
                     </nav>
 
-                    {/* Auth Buttons */}
                     <div className="flex items-center gap-4">
                         {isAuthenticated ? (
                             <>

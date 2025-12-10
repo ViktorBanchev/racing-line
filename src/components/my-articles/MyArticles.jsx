@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router';
 import UserContext from '../../contexts/userContext.jsx';
 import useRequest from '../../hooks/useRequest.js';
-import ArticleCard from './ArticleCard.jsx';
+import MyArticleCard from './MyArticleCard.jsx';
 import { FileText } from 'lucide-react';
 
 export default function MyArticles() {
@@ -25,8 +25,6 @@ export default function MyArticles() {
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] pb-20">
-
-            {/* --- HEADER --- */}
             <div className="bg-[#15151e] pt-24 pb-6 border-b-4 border-[#e10600]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-end">
                     <div>
@@ -41,8 +39,6 @@ export default function MyArticles() {
             </div>
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-
-                {/* Filter and Action Bar */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                     <Link
                         to="/articles/create"
@@ -64,7 +60,7 @@ export default function MyArticles() {
                 ) : (
                     <div className="grid grid-cols-1 gap-4">
                         {articles.map(article => (
-                            <ArticleCard
+                            <MyArticleCard
                                 key={article._id}
                                 {...article}
                                 onDelete={deleteHandler}

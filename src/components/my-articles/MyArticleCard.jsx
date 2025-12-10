@@ -1,18 +1,24 @@
 import { Link, useNavigate } from "react-router";
-import { Edit3, Trash2, Globe, File, Calendar, Edit } from 'lucide-react';
+import { Edit3, Trash2, Globe, Calendar } from 'lucide-react';
 
-export default function ArticleCard({
+export default function MyArticleCard({
     _id,
     title,
     category,
     image,
-    date,
+    _createdOn,
     status = 'Published',
     onDelete,
     isDeleting
 }) {
 
     const navigate = useNavigate();
+
+    const date = new Date(_createdOn).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
 
     return (
         <article className="bg-white rounded-sm shadow-sm transition-all duration-300 grid grid-cols-12 items-stretch border border-gray-200 hover:shadow-md hover:border-[#e10600] overflow-hidden">
