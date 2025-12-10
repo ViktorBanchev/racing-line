@@ -8,6 +8,9 @@ The project includes a rich-text editorial system, secure authentication, and re
 
 ## Features
 
+### Deployed
+- deployed at: https://racing-line-project.web.app/
+
 ### Rich Article Reader
 - Clean, optimized reading experience
 - Secure rendering using **sanitized HTML**
