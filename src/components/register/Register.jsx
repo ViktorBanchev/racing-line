@@ -10,7 +10,7 @@ export default function Register() {
     const {registerHandler} = useContext(UserContext)
     const navigate = useNavigate();
 
-    const [inputMethod, setInputMethod] = useState('url'); // 'url' | 'file'
+    const [inputMethod, setInputMethod] = useState('file'); // 'url' | 'file'
     const fileInputRef = useRef(null);
 
     const submitHandler = async (values) => {
@@ -20,8 +20,12 @@ export default function Register() {
             return toast.error('Username is required!');
         }
 
-        if (!email || !password) {
-            return toast.error('Email or Password is missing!');
+        if (!email) {
+            return toast.error('Email is required!');
+        }
+
+        if (!password) {
+            return toast.error('Password is required!');
         }
 
         if (password !== confirmPassword) {
@@ -56,17 +60,11 @@ export default function Register() {
 
     return (
         <div className="min-h-screen bg-[#15151e] flex items-center justify-center py-12 px-4 relative overflow-hidden">
-            {/* Background Aesthetics */}
             <div className="absolute inset-0 overflow-hidden">
-                <div
-                    className="absolute -top-20 -right-20 w-96 h-96 bg-[#e10600] opacity-10 rounded-full blur-[100px]"></div>
-                <div
-                    className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/50 to-transparent"></div>
-                {/* Racing Stripes */}
-                <div
-                    className="absolute top-0 left-1/4 w-32 h-full bg-white/5 skew-x-[-12deg] transform -translate-x-1/2"></div>
-                <div
-                    className="absolute top-0 left-1/4 w-8 h-full bg-[#e10600]/10 skew-x-[-12deg] transform translate-x-20"></div>
+                <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#e10600] opacity-10 rounded-full blur-[100px]"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute top-0 left-1/4 w-32 h-full bg-white/5 skew-x-[-12deg] transform -translate-x-1/2"></div>
+                <div className="absolute top-0 left-1/4 w-8 h-full bg-[#e10600]/10 skew-x-[-12deg] transform translate-x-20"></div>
             </div>
 
             <div className="max-w-md w-full relative z-10">
@@ -124,17 +122,17 @@ export default function Register() {
                                 <div className="flex bg-gray-100 p-0.5 rounded-sm">
                                     <button
                                         type="button"
-                                        onClick={() => setInputMethod('url')}
-                                        className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'url' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
-                                    >
-                                        <LinkIcon size={10}/> URL
-                                    </button>
-                                    <button
-                                        type="button"
                                         onClick={() => setInputMethod('file')}
                                         className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'file' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
                                         <Upload size={10}/> Upload
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setInputMethod('url')}
+                                        className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wide rounded-sm transition-all flex items-center gap-1 ${inputMethod === 'url' ? 'bg-white shadow-sm text-[#e10600]' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <LinkIcon size={10}/> URL
                                     </button>
                                 </div>
                             </div>
