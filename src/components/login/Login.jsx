@@ -18,7 +18,7 @@ export default function Login() {
 
         try {
             await loginHandler({ email, password });
-            toast.success('Login successful!', {autoClose: 2000});
+            toast.success('Login successful!', { autoClose: 2000 });
             navigate('/');
         } catch (error) {
             toast.error(error.message);
@@ -35,11 +35,9 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-[#15151e] flex items-center justify-center py-12 px-4 relative overflow-hidden">
-            {/* Background Aesthetics */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
                 <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#e10600] opacity-10 rounded-full blur-[100px]"></div>
-                {/* Diagonal Slashes */}
                 <div className="absolute bottom-0 right-1/4 w-4 h-full bg-white/5 skew-x-[-12deg] transform translate-x-1/2"></div>
             </div>
 
@@ -52,12 +50,9 @@ export default function Login() {
                 </div>
 
                 <div className="bg-white p-8 shadow-2xl relative">
-                    {/* Top Accent */}
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#15151e] to-[#e10600]"></div>
 
                     <form className="space-y-6" action={formAction}>
-
-                        {/* Email */}
                         <div className="group">
                             <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Email Address</label>
                             <div className="relative">
@@ -72,7 +67,6 @@ export default function Login() {
                             </div>
                         </div>
 
-                        {/* Password */}
                         <div className="group">
                             <label className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Password</label>
                             <div className="relative">
