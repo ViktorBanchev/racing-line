@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite'
+// import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -8,4 +9,14 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
+    test: {
+        environment: 'jsdom',
+        globals: false, // inject: it, should, expect... in global scope if true
+        setupFiles: [
+            './src/tests/setupTests.js',
+        ],
+        coverage: {
+            provider: 'istanbul'
+        }
+    }
 })
