@@ -34,7 +34,7 @@ export default function useRequest(url, initialState, config = {}) {
         }
 
         const response = await fetch(`${baseUrl}${url}`, options);
-
+        
         setIsLoading(false);
 
         if (response.status === 204) {

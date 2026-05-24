@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react"
-import useRequest from "../hooks/useRequest.js";
+import useRequest from "../hooks/useRequest.js"
 import useLocalStorage from "../hooks/useLocalStorage.js";
 
 const UserContext = createContext({
