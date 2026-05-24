@@ -1,12 +1,15 @@
 import { Schema, Types, model } from 'mongoose';
 
-interface IArticle extends Document {
+export interface IArticle extends Document {
     title: string;
     category: string;
     image: string;
     likedBy: Types.ObjectId[];
     content: string;
     author: Types.ObjectId;
+    createdAt: Date;
+    updatedAt: Date;
+    _id: string;
 }
 
 const articleSchema = new Schema<IArticle>({
@@ -24,7 +27,7 @@ const articleSchema = new Schema<IArticle>({
     },
     likedBy: [{
         type: Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
     }],
     content: {
         type: String,
@@ -32,7 +35,8 @@ const articleSchema = new Schema<IArticle>({
     },
     author: {
         type: Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     }
 }, { timestamps: true })
 
