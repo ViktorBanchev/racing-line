@@ -8,6 +8,7 @@ export interface IUser {
     image: string;
     createdAt: Date;
     updatedAt: Date;
+    role: 'user' | 'admin'
 }
 
 const userSchema = new Schema<IUser>({
@@ -25,8 +26,13 @@ const userSchema = new Schema<IUser>({
     password: {
         type: String,
         required: true
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     }
-});
+}, { timestamps: true });
 
 userSchema.pre("save", async function () {
     const hashedPassword = await bcrypt.hash(this.password, 10);
