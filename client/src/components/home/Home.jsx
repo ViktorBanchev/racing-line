@@ -5,12 +5,12 @@ import { ChevronRight, Flag } from 'lucide-react'
 
 export default function Home() {
     const urlParams = new URLSearchParams({
-        sortBy: '_createdOn desc',
+        sortBy: 'createdAt desc',
         pageSize: 3,
-        load: `author=_ownerId:users`
+        load: `author=author:users`
     })
 
-    const { data: articles, isLoading } = useRequest(`/data/articles?${urlParams}`, []);
+    const { data: articles, isLoading } = useRequest(`/articles?${urlParams}`, []);
 
     return (
         <div className="min-h-screen bg-[#f8f9fa]">
