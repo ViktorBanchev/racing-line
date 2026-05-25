@@ -1,4 +1,4 @@
-import { startTransition, useContext, useOptimistic, useRef } from "react";
+import { startTransition, useContext, useMemo, useOptimistic, useRef, useState } from "react";
 import useForm from "../../hooks/useForm.js";
 import useRequest from "../../hooks/useRequest.js";
 import UserContext from "../../contexts/userContext.jsx";
@@ -7,18 +7,15 @@ import { toast } from "react-toastify";
 
 export default function CommentSection({ articleId }) {
     const { user, isAuthenticated } = useContext(UserContext);
+    const [visibleCount, setVisibleCount] = useState(5);
 
     const formRef = useRef();
-    const urlParams = new URLSearchParams({
-        where: `_articleId="${articleId}"`,
-        load: `author=_ownerId:users`
-    })
-    const { request, data: comments, setData: setComments } = useRequest(`/data/comments?${urlParams}`, [], { noAuth: true });
+    const { request, data: comments, setData: setComments } = useRequest(`/comments/${articleId}`, [], { noAuth: true });
 
     const [optimisticComments, dispatchOptimisticComments] = useOptimistic(comments, (state, action) => {
         switch (action.type) {
             case 'ADD_COMMENT':
-                return [...state, action.payload];
+                return [action.payload, ...state];
             default:
                 return state;
         }
@@ -35,22 +32,32 @@ export default function CommentSection({ articleId }) {
             return toast.info('You must be logged in to post a comment');
         }
 
-        const newComment = {
-            _id: uuid(),
-            comment,
-            _articleId: articleId,
-            author: user
-        }
+        const commentPayload = {
+            content: comment
+        };
 
-        dispatchOptimisticComments({ type: 'ADD_COMMENT', payload: { ...newComment, optimistic: true } })
+        const optimisticComment = {
+            _id: uuid(),
+            content: comment,
+            createdAt: new Date().toISOString(),
+            author: {
+                _id: user._id,
+                username: user.username,
+                image: user.image
+            },
+            optimistic: true
+        };
+
+        dispatchOptimisticComments({ type: 'ADD_COMMENT', payload: { ...optimisticComment, optimistic: true } });
+        resetForm();
         try {
-            const result = await request('/data/comments', "POST", newComment);
+            const result = await request(`/comments/${articleId}`, "POST", commentPayload);
+
             startTransition(() => {
-                setComments(state => [...state, result])
+                setComments(state => [result.data, ...state])
             });
             resetForm();
-        } catch (err) {
-            console.log(err);
+        } catch {
             toast.error('Failed to post comment. Please try again later.');
         }
     }
@@ -60,10 +67,42 @@ export default function CommentSection({ articleId }) {
         formAction,
         resetForm
     } = useForm(submitCommentHandler, {
-        comment: '',
+        content: '',
     })
 
+    const renderedComments = useMemo(() => {
+        if (!optimisticComments || optimisticComments.length === 0) return null;
 
+        return optimisticComments.slice(0, visibleCount).map(com => {
+            const timeSinceRaw = Date.now() - new Date(com.createdAt);
+            const timeSinceMinutes = Math.floor(timeSinceRaw / 60000);
+            const timeSinceHours = Math.floor(timeSinceMinutes / 60);
+            const timeSinceDays = Math.floor(timeSinceHours / 24);
+
+            let timeSince = 'Just now';
+            if (timeSinceDays > 0) {
+                timeSince = `${timeSinceDays} day${timeSinceDays > 1 ? 's' : ''} ago`;
+            } else if (timeSinceHours > 0) {
+                timeSince = `${timeSinceHours} hour${timeSinceHours > 1 ? 's' : ''} ago`;
+            } else if (timeSinceMinutes > 0) {
+                timeSince = `${timeSinceMinutes} minute${timeSinceMinutes > 1 ? 's' : ''} ago`;
+            }
+
+            return (
+                <div className={`flex gap-4 transition-all duration-300 ${com.optimistic ? 'opacity-50' : 'opacity-100'}`} key={com._id}>
+                    <img src={com.author?.image || "https://via.placeholder.com/40"} alt="User" className="w-10 h-10 rounded-full bg-gray-100 object-cover" />
+                    <div className="flex-grow">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="font-bold text-sm text-[#15151e]">{com.author?.username}</span>
+                            <span className="text-xs text-gray-400">{timeSince}</span>
+                        </div>
+                        <p className="text-sm text-gray-700">{com.content}</p>
+                    </div>
+                    {com.optimistic && <span className="text-[10px] text-gray-400 uppercase font-bold animate-pulse">Sending...</span>}
+                </div>
+            )
+        });
+    }, [optimisticComments, visibleCount]);
 
     return (
         <div className="mt-2">
@@ -87,38 +126,19 @@ export default function CommentSection({ articleId }) {
             </form>
 
             <div className="space-y-10">
-                {optimisticComments.map(com => {
-                    const timeSinceRaw = Date.now() - new Date(com._createdOn);
-                    
-                    const timeSinceMinutes = Math.floor(timeSinceRaw / 60000);
-                    const timeSinceHours = Math.floor(timeSinceMinutes / 60);
-                    const timeSinceDays = Math.floor(timeSinceHours / 24);
-
-                    let timeSince = 'Just now';
-                    if (timeSinceDays > 0) {
-                        timeSince = `${timeSinceDays} day${timeSinceDays > 1 ? 's' : ''} ago`;
-                    } else if (timeSinceHours > 0) {
-                        timeSince = `${timeSinceHours} hour${timeSinceHours > 1 ? 's' : ''} ago`;
-                    } else if (timeSinceMinutes > 0) {
-                        timeSince = `${timeSinceMinutes} minute${timeSinceMinutes > 1 ? 's' : ''} ago`;
-                    }
-                    
-
-                    return (
-                    <div className="flex gap-4" key={com._id}>
-                        <img src={com.author.image} alt="User" className="w-10 h-10 rounded-full bg-gray-100" />
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold text-sm text-[#15151e]">{com.author?.username}</span>
-                                <span className="text-xs text-gray-400">{timeSince}</span>
-                            </div>
-                            <p className="text-sm text-gray-700">{com.comment}</p>
-                        </div>
-
-                        {com.optimistic && 'Sending'}
-                    </div>)})}
-
+                {renderedComments}
             </div>
+
+            {optimisticComments?.length > visibleCount && (
+                <div className="mt-8 flex justify-center">
+                    <button
+                        onClick={() => setVisibleCount(prev => prev + 5)}
+                        className="px-6 py-2 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-[10px] tracking-wider rounded-sm hover:text-[#e10600] hover:border-[#e10600] transition-colors"
+                    >
+                        Load More Comments ({optimisticComments.length - visibleCount} hidden)
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
