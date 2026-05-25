@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 const app = express();
 
 try {
-    await mongoose.connect('mongodb://localhost:27017', {
+    await mongoose.connect(process.env.MONGO_DB!, {
         dbName: 'racing-line',
     })
 } catch (error) {
