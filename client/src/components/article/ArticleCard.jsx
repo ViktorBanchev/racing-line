@@ -9,14 +9,14 @@ export default function ArticleCard({
     image,
     excerpt,
     author,
-    _createdOn,
+    createdAt,
 }) {
     const categoryFormatted = category
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-    const date = new Date(_createdOn).toLocaleDateString('en-GB');
+    const date = new Date(createdAt).toLocaleDateString('en-GB');
 
     return (
         <article className="group relative flex flex-col h-full bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden">

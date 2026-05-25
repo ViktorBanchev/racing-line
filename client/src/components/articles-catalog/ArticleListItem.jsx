@@ -2,22 +2,21 @@ import { Link } from 'react-router';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { formatDate } from '../../utils/dateUtils.js';
 
-export default function ArticleListItem({ _id, title, category, image, _createdOn, excerpt }) {
+export default function ArticleListItem({ _id, title, category, image, createdAt, excerpt }) {
     const categoryFormatted = category
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-    const date = formatDate(_createdOn);
+    const date = formatDate(createdAt);
 
     return (
         <Link
             to={`/articles/${_id}`}
             className="group block bg-white hover:bg-gray-50 transition-colors duration-300 overflow-hidden 
-                       flex flex-row items-center border border-gray-200 hover:border-[#e10600] rounded-sm"
+                       flex flex-col sm:flex-row items-center border border-gray-200 hover:border-[#e10600] rounded-sm"
         >
-
-            <div className="relative w-48 h-32 flex-shrink-0 overflow-hidden">
+            <div className="relative w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 overflow-hidden">
                 <img
                     src={image}
                     alt={title}
@@ -30,7 +29,7 @@ export default function ArticleListItem({ _id, title, category, image, _createdO
                 </span>
             </div>
 
-            <div className="flex flex-col justify-between flex-grow min-w-0 h-full p-4 md:p-5">
+            <div className="flex flex-col justify-between flex-grow min-w-0 h-full p-4 md:p-5 w-full">
                 <h3 className="text-xl font-black text-[#15151e] leading-snug group-hover:text-[#e10600] transition-colors mb-2">
                     {title}
                 </h3>

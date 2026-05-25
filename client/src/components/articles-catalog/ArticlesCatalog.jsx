@@ -22,7 +22,7 @@ export default function ArticleCatalog() {
         filterQuery = `&where=${encodedCategory}`;
     }
 
-    const { data: articles, isLoading } = useRequest(`/data/articles?${filterQuery}`, [], {noAuth: true});
+    const { data: articles, isLoading } = useRequest(`/articles?${filterQuery}`, [], {noAuth: true});
 
     const navigateToNewQuery = (key, value) => {
         const newSearchParams = new URLSearchParams(location.search);
