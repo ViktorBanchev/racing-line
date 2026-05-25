@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { createArticle, getAllArticles, getArticle } from '../services/articleService.js'
+import { createArticle, deleteArticle, getAllArticles, getArticle, updateArticle } from '../services/articleService.js'
 import { isAdmin, isAuth } from "../middlewares/authMiddleware.js";
 import type { ArticlePayload, ArticleQueryOptions } from "../types/article.types.js";
 
@@ -56,6 +56,45 @@ articleController.get('/:id', async (req: Request, res: Response) => {
         res.status(500).json({
             message: error.message || 'Server error.'
         })
+    }
+})
+
+articleController.delete('/:articleId', isAuth, async (req: Request, res: Response) => {
+    try {
+        const articleId = req.params.articleId as string;
+        const userId = req.user!.id;
+        const userRole = req.user!.role;
+
+        await deleteArticle(articleId, userId, userRole);
+        res.status(200).json({ message: 'Article deleted successfully.' })
+    } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+            return res.status(403).json({ message: 'You are not authorized to delete this article!' });
+        }
+
+        res.status(400).json({ message: error.message || 'Failed to delete article' });
+    }
+});
+
+articleController.put('/:articleId', isAuth, async (req: Request, res: Response) => {
+    try {
+        const articleId = req.params.articleId as string;
+        const userId = req.user!.id;
+        const userRole = req.user!.role;
+        const articleData: ArticlePayload = req.body;
+
+        const updatedArticle = await updateArticle(articleId, userId, userRole, articleData);
+
+        res.status(200).json({
+            message: "Article updated successfully.",
+            data: updatedArticle
+        })
+    } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+            return res.status(403).json({ message: 'You are not authorized to edit this article!' });
+        }
+
+        res.status(400).json({ message: error.message || 'Failed to update article' });
     }
 })
 
