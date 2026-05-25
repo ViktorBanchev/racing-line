@@ -21,6 +21,11 @@ export async function getAllArticles(options: ArticleQueryOptions) {
     }
 
     if (options.where) {
+        const [field, rawValue] = options.where.split('=');
+        const cleanValue = rawValue?.replace(/"/g, '');
+        query = query.where({ [field as string]: cleanValue })
+    }
+
     return await query;
 }
 
@@ -37,4 +42,42 @@ export async function getArticle(articleId: string, options: ArticleQueryOptions
     }
 
     return await query;
+}
+
+export async function deleteArticle(articleId: string, userId: string, userRole: string) {
+    const article = await Article.findById(articleId);
+    if (!article) {
+        throw new Error("Article not found!");
+    }
+
+    const isAuthor = article.author.toString() === userId.toString();
+    const isAdmin = userRole === 'admin';
+
+    if (!isAuthor && !isAdmin) {
+        throw new Error("Unauthorized!");
+    }
+
+    await Article.findByIdAndDelete(articleId);
+}
+
+export async function updateArticle(articleId: string, userId: string, userRole: string, articleData: ArticlePayload) {
+    const article = await Article.findById(articleId);
+    if (!article) {
+        throw new Error("Article not found!");
+    }
+
+    const isAuthor = article.author.toString() === userId.toString();
+    const isAdmin = userRole === 'admin';
+
+    if (!isAuthor && !isAdmin) {
+        throw new Error("Unauthorized!");
+    }
+
+    const updatedArticle = await Article.findByIdAndUpdate(
+        articleId,
+        articleData,
+        { new: true, runValidator: true }
+    );
+
+    return updatedArticle;
 }
