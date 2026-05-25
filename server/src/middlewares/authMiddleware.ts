@@ -16,10 +16,8 @@ export async function isAuth(req: Request, res: Response, next: NextFunction) {
         let token;
 
         if (req.headers.authorization && req.headers.authorization?.startsWith('Bearer')) {
-            console.log('BEARER')
             token = req.headers.authorization.split(' ')[1];
         }
-        console.log(token)
 
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized! Please login.' });

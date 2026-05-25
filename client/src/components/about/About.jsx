@@ -15,8 +15,6 @@ export default function About() {
             </div>
 
             <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-12">
-
-                {/* Mission Section */}
                 <section className="bg-white p-8 shadow-md rounded-sm border-l-4 border-[#15151e]">
                     <h2 className="text-2xl font-black italic text-[#15151e] mb-4">Our Mission</h2>
                     <p className="text-gray-700 leading-relaxed">
@@ -27,7 +25,6 @@ export default function About() {
                     </p>
                 </section>
 
-                {/* Technical Section */}
                 <section className="bg-white p-8 shadow-md rounded-sm border-l-4 border-[#e10600]">
                     <h2 className="text-2xl font-black italic text-[#15151e] mb-4">Technical Specifications</h2>
                     <p className="text-gray-700 mb-4">
