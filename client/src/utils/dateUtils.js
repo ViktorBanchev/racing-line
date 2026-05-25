@@ -1,5 +1,5 @@
-export function formatDate(_createdOn) {
-    return new Date(_createdOn).toLocaleDateString('en-GB', {
+export function formatDate(createdAt) {
+    return new Date(createdAt).toLocaleDateString('en-GB', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',

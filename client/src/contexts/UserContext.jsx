@@ -8,7 +8,7 @@ const UserContext = createContext({
         username: '',
         email: '',
         password: '',
-        _createdOn: 0,
+        createdAt: 0,
         _id: '',
         accessToken: ''
     },
@@ -21,20 +21,25 @@ export function UserProvider(props) {
     const [user, setUser] = useLocalStorage(null, 'auth');
     const { request } = useRequest();
 
-    const registerHandler = async ({ username, email, password, image }) => {
-        const newUser = { username, email, password, image };
-        const result = await request('/users/register', 'POST', newUser);
-        setUser(result);
+    const registerHandler = async ({ username, email, password, confirmPassword, image }) => {
+        const newUser = { username, email, password, confirmPassword, image };
+        const result = await request('/auth/register', 'POST', newUser);
+        setUser({
+            accessToken: result.data.accessToken,
+            ...result.data.user
+        });
     }
 
     const loginHandler = async ({ email, password }) => {
-        const result = await request('/users/login', 'POST', { email, password });
-        setUser(result);
+        const result = await request('/auth/login', 'POST', { email, password });
+        setUser({
+            accessToken: result.data.accessToken,
+            ...result.data.user
+        });
     }
 
     const logoutHandler = () => {
-        return request('/users/logout', 'GET', null, { accessToken: user.accessToken })
-            .finally(() => setUser(null))
+        setUser(null);
     }
 
     const invalidateTokenHandler = async () => {

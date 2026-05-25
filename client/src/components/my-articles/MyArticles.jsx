@@ -9,17 +9,17 @@ export default function MyArticles() {
     const { user } = useContext(UserContext)
 
     const urlParams = new URLSearchParams({
-        where: `_ownerId="${user?._id}"`
+        where: `author="${user?._id}"`
     })
 
     const { data: articles,
         request,
         setData,
         isLoading
-    } = useRequest(`/data/articles?${urlParams.toString()}`, []);
+    } = useRequest(`/articles?${urlParams.toString()}`, []);
 
     const deleteHandler = async (articleId) => {
-        await request(`/data/articles/${articleId}`, 'DELETE', null);
+        await request(`/articles/${articleId}`, 'DELETE', null);
         setData(state => state.filter(todo => todo._id !== articleId));
     }
 

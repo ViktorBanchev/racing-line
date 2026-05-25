@@ -6,7 +6,7 @@ export default function MyArticleCard({
     title,
     category,
     image,
-    _createdOn,
+    createdAt,
     status = 'Published',
     onDelete,
     isDeleting
@@ -14,7 +14,7 @@ export default function MyArticleCard({
 
     const navigate = useNavigate();
 
-    const date = new Date(_createdOn).toLocaleDateString('en-GB', {
+    const date = new Date(createdAt).toLocaleDateString('en-GB', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
