@@ -20,6 +20,7 @@ export async function getAllArticles(options: ArticleQueryOptions) {
         query = query.populate('author', 'username email image')
     }
 
+    if (options.where) {
     return await query;
 }
 

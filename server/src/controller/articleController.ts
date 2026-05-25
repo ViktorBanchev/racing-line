@@ -10,7 +10,8 @@ articleController.get('/', async (req: Request, res: Response) => {
         const queryOptions: ArticleQueryOptions = {
             sortBy: req.query.sortBy as string,
             pageSize: req.query.pageSize as string,
-            load: req.query.load as string
+            load: req.query.load as string,
+            where: req.query.where as string,
         };
 
         const articles = await getAllArticles(queryOptions);
