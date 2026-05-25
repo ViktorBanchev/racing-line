@@ -29,7 +29,7 @@ export default function useRequest(url, initialState, config = {}) {
         else if (config?.accessToken || isAuthenticated) {
             options.headers = {
                 ...options.headers,
-                'X-Authorization': config.accessToken || user.accessToken,
+                'Authorization': `Bearer ${config.accessToken || user.accessToken}`,
             }
         }
 
@@ -59,7 +59,7 @@ export default function useRequest(url, initialState, config = {}) {
         if (!url) return;
         request(url, 'GET', null, config)
             .then(result => {
-                setData(result);
+                setData(result.data);
                 setIsLoading(false);
             })
             .catch(err => {
