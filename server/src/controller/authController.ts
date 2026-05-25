@@ -20,7 +20,8 @@ authController.post('/register', async (req: Request, res: Response) => {
             _id: user.id,
             username: user.username,
             email: user.email,
-            image: user.image
+            image: user.image,
+            role: user.role
         }
 
         res.status(201).json({
@@ -48,7 +49,8 @@ authController.post('/login', async (req: Request, res: Response) => {
             _id: user.id,
             username: user.username,
             email: user.email,
-            image: user.image
+            image: user.image,
+            role: user.role
         }
 
         res.status(200).json({

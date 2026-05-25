@@ -4,7 +4,7 @@ import UserContext from "../../contexts/UserContext.jsx";
 import { Menu, X } from 'lucide-react';
 
 export default function Header() {
-    const { isAuthenticated } = useContext(UserContext);
+    const { isAuthenticated, user } = useContext(UserContext);
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -59,9 +59,12 @@ export default function Header() {
                     <div className="hidden md:flex items-center gap-4">
                         {isAuthenticated ? (
                             <>
-                                <Link to="/articles/create" className="flex items-center gap-2 bg-[#e10600] hover:bg-[#c10500] text-white px-5 py-2 rounded transform -skew-x-12 hover:skew-x-0 transition-all shadow-lg hover:shadow-red-600/40">
-                                    <span className="transform skew-x-12 font-bold uppercase text-sm tracking-wider">Write</span>
-                                </Link>
+                                {user.role === 'admin' && (
+                                    <Link to="/articles/create" className="flex items-center gap-2 bg-[#e10600] hover:bg-[#c10500] text-white px-5 py-2 rounded transform -skew-x-12 hover:skew-x-0 transition-all shadow-lg hover:shadow-red-600/40">
+                                        <span className="transform skew-x-12 font-bold uppercase text-sm tracking-wider">Write</span>
+                                    </Link>
+                                )}
+
                                 <Link to="/logout" className="text-gray-400 hover:text-white font-semibold text-sm">Logout</Link>
                             </>
                         ) : (
