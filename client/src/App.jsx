@@ -8,7 +8,7 @@ import Register from "./components/register/Register.jsx"
 import Login from "./components/login/Login.jsx"
 import Logout from "./components/logout/Logout.jsx"
 import MyArticles from "./components/my-articles/MyArticles.jsx"
-import ArticleForm from "./components/article-create/ArticleForm.jsx"
+import ArticleForm from "./components/article-form/ArticleForm.jsx"
 import { AuthRouteGuard, GuestRouteGuard } from "./components/route-guard/RouteGuard.jsx"
 import { useLayoutEffect } from "react"
 import About from "./components/about/About.jsx";
