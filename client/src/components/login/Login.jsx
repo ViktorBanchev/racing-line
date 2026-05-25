@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router';
-import UserContext from '../../contexts/userContext.jsx';
+import UserContext from '../../contexts/UserContext.jsx';
 import useForm from '../../hooks/useForm.js';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { toast } from 'react-toastify';

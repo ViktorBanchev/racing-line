@@ -1,7 +1,7 @@
 import { startTransition, useContext, useMemo, useOptimistic, useRef, useState } from "react";
 import useForm from "../../hooks/useForm.js";
 import useRequest from "../../hooks/useRequest.js";
-import UserContext from "../../contexts/userContext.jsx";
+import UserContext from "../../contexts/UserContext.jsx";
 import { v4 as uuid } from 'uuid'
 import { toast } from "react-toastify";
 

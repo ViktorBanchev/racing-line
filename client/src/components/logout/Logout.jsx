@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
-import UserContext from "../../contexts/userContext.jsx";
+import UserContext from "../../contexts/UserContext.jsx";
 import { toast } from "react-toastify";
 
 export default function Logout() {

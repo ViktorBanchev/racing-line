@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react"
-import UserContext from "../contexts/userContext.jsx"
+import UserContext from "../contexts/UserContext.jsx"
 import { toast } from "react-toastify";
 
 const baseUrl = import.meta.env.VITE_APP_SERVER_URL;

@@ -6,7 +6,7 @@ import {
     TrendingUp,
 } from 'lucide-react';
 import { useContext } from 'react';
-import UserContext from '../../contexts/userContext.jsx';
+import UserContext from '../../contexts/UserContext.jsx';
 import CommentSection from './CommentSection.jsx';
 import DOMPurify from 'dompurify';
 

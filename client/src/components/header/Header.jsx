@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
-import UserContext from "../../contexts/userContext.jsx";
+import UserContext from "../../contexts/UserContext.jsx";
 import { Menu, X } from 'lucide-react';
 
 export default function Header() {
