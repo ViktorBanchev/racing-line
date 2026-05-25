@@ -16,15 +16,15 @@ export default function ArticleDetails() {
     const { user } = useContext(UserContext);
 
     const urlParams = new URLSearchParams({
-        load: `author=_ownerId:users`
+        load: `author=author:users`
     })
 
     const {
         data: article,
         request,
-    } = useRequest(`/data/articles/${articleId}?${urlParams}`, { likedBy: [], author: {} }, { noAuth: true });
+    } = useRequest(`/articles/${articleId}?${urlParams}`, { likedBy: [], author: {} }, { noAuth: true });
 
-    const formattedDate = new Date(article._createdOn).toLocaleDateString('en-GB', {
+    const formattedDate = new Date(article.createdAt).toLocaleDateString('en-GB', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
@@ -33,14 +33,14 @@ export default function ArticleDetails() {
     });
     article.date = formattedDate;
 
-    const { data: newstFiveArticles } = useRequest('/data/articles?sortBy=_createdOn%20desc&pageSize=5', [], { noAuth: true });
+    const { data: newstFiveArticles } = useRequest('/articles?sortBy=createdAt%20desc&pageSize=5', [], { noAuth: true });
 
     if (!article || !article.title) return <div
         className="min-h-screen bg-[#f8f9fa] pt-32 text-center font-bold text-gray-500 uppercase tracking-widest">Loading
         Paddock Data...</div>;
 
     const deleteHandler = async () => {
-        await request(`/data/articles/${articleId}`, 'DELETE', null);
+        await request(`/articles/${articleId}`, 'DELETE', null);
         navigate('/')
     }
 
@@ -91,7 +91,7 @@ export default function ArticleDetails() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
                     <div className="lg:col-span-8">
-                        {user?._id === article._ownerId
+                        {user?._id === article.author
                             ? (
                                 <div className="flex gap-2 mb-6">
                                     <Link to={`/articles/${articleId}/edit`}
