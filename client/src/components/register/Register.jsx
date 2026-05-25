@@ -33,7 +33,7 @@ export default function Register() {
         }
 
         try {
-            await registerHandler({ username, email, password, image });
+            await registerHandler({ username, email, password, confirmPassword, image });
             toast.success('Registration successful!', { autoClose: 2000 });
             navigate('/');
         } catch (error) {
@@ -81,8 +81,6 @@ export default function Register() {
                         className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#e10600] to-[#15151e]"></div>
 
                     <form className="space-y-5" action={formAction}>
-
-                        {/* Username */}
                         <div className="group">
                             <label
                                 className="block text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-wider group-focus-within:text-[#e10600] transition-colors">Username</label>
