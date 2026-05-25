@@ -6,4 +6,5 @@ export type ArticleQueryOptions = {
     sortBy?: string;
     pageSize?: string;
     load?: string; 
+    where?: string;
 }
