@@ -6,12 +6,12 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAdCXLKF4DV7ad0qs3Yp-7ZmL0_zgP2IBA",
-  authDomain: "racing-line-project.firebaseapp.com",
-  projectId: "racing-line-project",
-  storageBucket: "racing-line-project.firebasestorage.app",
-  messagingSenderId: "840787655838",
-  appId: "1:840787655838:web:4f90748675a6732b268f8f"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
